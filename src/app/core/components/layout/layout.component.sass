@@ -1,0 +1,46 @@
+$header-height: 60px
+
+.header
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  height: $header-height
+  display: flex
+  align-items: center
+  font-weight: 600
+  // border-bottom: 1px solid #eee
+
+  &--logo
+    width: 45px
+    margin: 0 20px
+
+
+.main
+  position: relative
+  height: 100%
+  margin: 20px auto 32px
+  padding-top: $header-height
+  padding-bottom: $header-height
+  display: flex
+  flex-direction: column
+  align-items: center
+
+
+svg#clouds
+  position: fixed
+  bottom: -160px
+  left: -230px
+  z-index: -10
+  width: 1920px
+
+
+.footer
+  position: absolute
+  right: 0
+  bottom: 0
+  left: 0
+  height: $header-height
+  display: flex
+  justify-content: center
+  align-items: center
