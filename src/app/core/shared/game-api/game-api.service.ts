@@ -10,7 +10,11 @@ import { GameAction } from './game-action';
 })
 export class GameApiService {
 
-  constructor(private connectionService: GameApiConnectionService) {
+  private connectionService: GameApiConnectionService;
+
+
+  constructor() {
+    this.connectionService = new GameApiConnectionService();
   }
 
 

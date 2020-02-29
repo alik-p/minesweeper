@@ -48,7 +48,7 @@ export abstract class WebSocketService {
 
   sendMessage<T>(data: T): void {
     if (this.isConnected) {
-      this.socket$.next(JSON.stringify(data));
+      this.socket$.next(data);
     } else {
       console.error('WebSocked Send error!');
     }

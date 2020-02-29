@@ -1,11 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { WebSocketConfig, WebSocketService } from '../websocket';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+
 export class GameApiConnectionService extends WebSocketService implements OnDestroy {
 
   constructor() {
