@@ -1,30 +1,19 @@
 <p>minefield works!</p>
 <!-- Links -->
-<div class="card-container minefield">
-  <div class="minefield--row" *ngFor="let row of [0, 1, 2 , 3, 4, 5]">
-    <a class="circle-link">
-      <i class="fas fa-bomb"></i>
-    </a>
-    <a class="circle-link mark">
-      <i class="fas fa-map-pin"></i>
-    </a>
-    <a class="circle-link mark">
-      <i class="fas fa-flag-checkered"></i>
-    </a>
-    <a class="circle-link fire">
-      <i class="fas fa-fire-alt"></i>
-    </a>
-    <a class="circle-link">
-      <i class="fas fa-question"></i>
-    </a>
-    <a class="circle-link icon-1">
-      <i></i>
-    </a>
-    <a class="circle-link icon-2">
-      <i></i>
-    </a>
-    <a class="circle-link icon-3">
-      <i></i>
-    </a>
-  </div>
+<div id="minefield" class="card-container minefield">
+  <ng-container *ngIf="minefield">
+    <div class="minefield--row"
+         *ngFor="let row of minefieldRows; index as y"
+         (click)="onDemine($event)"
+         (contextmenu)="onFlagToggle($event)">
+      <ng-container *ngFor="let cell of minefieldCols; index as x">
+        <a class="minefield--cell icon--fire"
+           [ngClass]="fieldClass(x, y)" [attr.data-position]="[x, y]">
+          <i class="fas fa-bomb"></i>
+        </a>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>
+
+<pre>{{fieldsMarked | json}}</pre>

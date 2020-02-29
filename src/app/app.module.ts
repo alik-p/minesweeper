@@ -8,6 +8,7 @@ import { GamePageComponent } from './game/pages/game-page.component';
 import { MinefieldComponent } from './game/components/minefield/minefield.component';
 import { GameContainerComponent } from './game/components/game-container/game-container.component';
 import { TerminalComponent } from './game/components/terminal/terminal.component';
+import { DasboardComponent } from './game/components/dasboard/dasboard.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { TerminalComponent } from './game/components/terminal/terminal.component
     GamePageComponent,
     MinefieldComponent,
     GameContainerComponent,
-    TerminalComponent
+    TerminalComponent,
+    DasboardComponent
   ],
   imports: [
     CoreModule,

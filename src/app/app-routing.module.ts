@@ -6,7 +6,7 @@ import { GamePageComponent } from './game/pages/game-page.component';
 
 const routes: Routes = [
   {path: 'home', component: HomePageComponent},
-  {path: 'level', component: GamePageComponent},  // TODO level
+  {path: 'game', component: GamePageComponent},  // TODO level
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: '**', redirectTo: 'home'},
 ];

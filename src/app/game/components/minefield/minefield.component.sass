@@ -4,6 +4,11 @@
 %icon-number
   font-size: large
   font-weight: 700
+  border: none
+  box-shadow: none
+  &:hover
+    box-shadow: none
+    cursor: initial
   i
     font-style: inherit
 
@@ -13,7 +18,8 @@
   &--row
     display: flex
 
-.circle-link
+.minefield--cell
+  @extend %icon
   height: 40px
   width: 40px
   border-radius: 40px
@@ -27,39 +33,81 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)
   transition: 0.2s ease-out
 
+  &._closed
+    .fas:before
+      content: ''
 
-.circle-link:hover
+  &._exploded
+    .fas:before
+      content: '\f1e2'
+
+
+  &._marked
+    .fas:before
+      content: '\f11e'
+      color: #e13439
+
+  &._0
+    @extend %icon-number
+    i:before
+      content: ''
+
+  &._1
+    @extend %icon-number
+    color: #888
+    i:before
+      content: '1'
+
+  &._2
+    @extend %icon-number
+    color: darkgreen
+    i:before
+      content: '2'
+
+  &._3
+    @extend %icon-number
+    color: #4a3493
+    i:before
+      content: '3'
+
+  &._4
+    @extend %icon-number
+    color: #fb8c00
+    i:before
+      content: '4'
+
+  &._5
+    @extend %icon-number
+    color: #fb8c00
+    i:before
+      content: '5'
+
+  &._6
+    @extend %icon-number
+    color: #e12229
+    i:before
+      content: '6'
+
+  &._7
+    @extend %icon-number
+    color: #e12229
+    i:before
+      content: '7'
+
+  &._8
+    @extend %icon-number
+    color: #e12229
+    i:before
+      content: '8'
+
+  &._9
+    @extend %icon-number
+    color: #e12229
+    i:before
+      content: '9'
+
+
+.minefield--cell:hover
   transform: translateY(-0.25rem)
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2)
-
-
-.fire
-  @extend %icon
-  color: #fb8c00
-
-.mark
-  @extend %icon
-  color: #e13439
-
-
-
-.icon-1
-  @extend %icon-number
-  color: #888
-
-  i:before
-    content: '1'
-
-.icon-2
-  @extend %icon-number
-  color: darkgreen
-  i:before
-    content: '2'
-
-
-.icon-3
-  @extend %icon-number
-  color: #4a3493
-  i:before
-    content: '3'
 

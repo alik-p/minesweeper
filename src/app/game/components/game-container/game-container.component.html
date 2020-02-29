@@ -1,4 +1,11 @@
-<p>game-container works!</p>
-<app-minefield></app-minefield>
+
+<app-dasboard *ngIf="showDashboard" (action)="onDashboardAction($event)"></app-dasboard>
+
+Level: {{level}}
+<button (click)="onRestart()">Restart</button>
+<ng-container *ngIf="level > 0">
+  <app-minefield [data]="map$ | async" (demine)="onDemine($event)"></app-minefield>
+</ng-container>
+
 
 <app-terminal></app-terminal>
