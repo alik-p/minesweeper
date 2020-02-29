@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { GameAction, GameLevel } from '../../../core/shared/game-api';
+import { Component, OnInit } from '@angular/core';
+import { GameLevel } from '../../../core/shared/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { DashboardAction } from '../../shared/dashboard-action';
 import { Field } from '../../shared/minefield';
+import { FieldsSet } from '../../shared/fields-set';
 
 
 @Component({
@@ -13,17 +14,20 @@ import { Field } from '../../shared/minefield';
 })
 export class GameContainerComponent implements OnInit {
 
+  fieldsMarked: FieldsSet;
   showDashboard = true;
   level: GameLevel;
 
-  loose$: Observable<boolean>;
   map$: Observable<string[][]>;
+  stop$: Observable<any>;
 
-  constructor(private gameService: GameService) { }
+  constructor(private gameService: GameService) {
+  }
 
   ngOnInit(): void {
     this.map$ = this.gameService.map$;
-    // this.startGame();
+    this.stop$ = this.gameService.stopped$;
+
   }
 
 
@@ -35,12 +39,11 @@ export class GameContainerComponent implements OnInit {
   onDashboardAction(action: DashboardAction): void {
     switch (action) {
       case ('passwords'): {
-        console.log('TODO passwords')
+        console.log('TODO passwords');
         break;
       }
       default: {
-        // this.level = action;
-        this.startGame(action)
+        this.startGame(action);
         break;
       }
     }
@@ -57,7 +60,7 @@ export class GameContainerComponent implements OnInit {
     if (!field) {
       return;
     }
-    this.gameService.demineField(field.x,  field.y);
+    this.gameService.demineField(field.x, field.y);
     this.reloadMap();
   }
 
@@ -68,6 +71,7 @@ export class GameContainerComponent implements OnInit {
 
   private startGame(level: GameLevel): void {
     this.level = level;
+    this.fieldsMarked = new FieldsSet();
     this.gameService.startGame(level);
   }
 

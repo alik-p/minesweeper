@@ -1,11 +1,18 @@
-
 <app-dasboard *ngIf="showDashboard" (action)="onDashboardAction($event)"></app-dasboard>
 
 Level: {{level}}
 <button (click)="onRestart()">Restart</button>
-<ng-container *ngIf="level > 0">
-  <app-minefield [data]="map$ | async" (demine)="onDemine($event)"></app-minefield>
-</ng-container>
+
+<div class="minefield-container" *ngIf="level > 0">
+  <div class="stop-game" *ngIf="stop$ | async as reason">
+    {{reason}}
+  </div>
+  <app-minefield
+    [data]="map$ | async"
+    [(mines)]="fieldsMarked"
+    (demine)="onDemine($event)">
+  </app-minefield>
+</div>
 
 
 <app-terminal></app-terminal>
