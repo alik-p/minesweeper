@@ -8,7 +8,6 @@ import { filter, map, switchMap } from 'rxjs/operators';
 })
 export class GameService {
 
-
   constructor(private apiService: GameApiService) {
   }
 

@@ -1,4 +1,5 @@
 <p>minefield works!</p>
+<button (click)="onSolution()">Next</button>
 <!-- Links -->
 <div id="minefield" class="card-container minefield">
   <ng-container *ngIf="minefield">
@@ -15,5 +16,3 @@
     </div>
   </ng-container>
 </div>
-
-<pre>{{fieldsMarked | json}}</pre>

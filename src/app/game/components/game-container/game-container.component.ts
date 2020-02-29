@@ -3,8 +3,9 @@ import { GameLevel } from '../../../core/shared/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { DashboardAction } from '../../shared/dashboard-action';
-import { Field } from '../../shared/minefield';
+import { Field, Minefield } from '../../shared/minefield';
 import { FieldsSet } from '../../shared/fields-set';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -19,19 +20,26 @@ export class GameContainerComponent implements OnInit {
   level: GameLevel;
 
   map$: Observable<string[][]>;
-  stop$: Observable<any>;
+  minefield$: Observable<Minefield>;
+  restarted: boolean;   // TODO refactor
+  stop$: Observable<string>;
+
 
   constructor(private gameService: GameService) {
   }
 
   ngOnInit(): void {
     this.map$ = this.gameService.map$;
+    this.minefield$ = this.gameService.map$
+      .pipe(map((data: string[][]) => new Minefield(data)));
+
     this.stop$ = this.gameService.stopped$;
 
   }
 
 
   onDemine(field: Field): void {
+    this.restarted = false;
     this.demine(field);
   }
 
@@ -52,6 +60,7 @@ export class GameContainerComponent implements OnInit {
 
 
   onRestart(): void {
+    this.restarted = true;
     this.startGame(this.level);
   }
 

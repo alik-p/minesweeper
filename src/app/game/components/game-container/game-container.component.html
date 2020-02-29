@@ -4,11 +4,11 @@ Level: {{level}}
 <button (click)="onRestart()">Restart</button>
 
 <div class="minefield-container" *ngIf="level > 0">
-  <div class="stop-game" *ngIf="stop$ | async as reason">
+  <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
     {{reason}}
   </div>
   <app-minefield
-    [data]="map$ | async"
+    [minefield]="minefield$ | async"
     [(mines)]="fieldsMarked"
     (demine)="onDemine($event)">
   </app-minefield>

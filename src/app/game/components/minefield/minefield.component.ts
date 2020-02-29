@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field, Minefield } from '../../shared/minefield';
 import { FieldsSet } from '../../shared/fields-set';
+import { Probabilities } from '../../shared/probabilities';
 
 @Component({
   selector: 'app-minefield',
@@ -8,18 +9,15 @@ import { FieldsSet } from '../../shared/fields-set';
   styleUrls: ['./minefield.component.sass']
 })
 export class MinefieldComponent implements OnInit {
-  @Input()
-  set data(data: string[][]) {
-    this.initMinefield(data);
-  }
+  @Input() minefield: Minefield;
+  @Input() mines: FieldsSet;
 
   @Output() demine = new EventEmitter<Field>();
-  minefield: Minefield;
-  fieldsMarked: FieldsSet = new FieldsSet();
+  @Output() minesChange = new EventEmitter<FieldsSet>();
+
 
   constructor() {
   }
-
 
 
   get minefieldCols(): number[] {
@@ -36,10 +34,9 @@ export class MinefieldComponent implements OnInit {
 
 
   fieldClass(x: number, y: number): string {
-    // console.log('fieldClass this.fieldsMarked: ', this.fieldsMarked)
     const field = this.minefield.field(x, y);
     let result = '_closed';
-    if (this.fieldsMarked.has(field)) {
+    if (this.mines.has(field)) {
       result = '_marked';
     } else if (field.isExploded()) {
       result = '_exploded';
@@ -68,10 +65,17 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isOpened()) {
       return;
     }
-    this.fieldsMarked.has(field)
-      ? this.fieldsMarked.delete(field)
-      : this.fieldsMarked.add(field);
+    this.mines.has(field)
+      ? this.mines.delete(field)
+      : this.mines.add(field);
     // field.mine = !field.mine;
+    this.minesChange.emit(this.mines);
+  }
+
+
+  onSolution(): void {
+    const probabilities = Probabilities.calculate(this.minefield);
+    console.log('probabilities: ', probabilities);
   }
 
 
@@ -104,11 +108,6 @@ export class MinefieldComponent implements OnInit {
     }
     const [x, y] = position.split(',').map(v => +v);
     return {x, y};
-  }
-
-
-  private initMinefield(data: string[][]): void {
-    this.minefield = new Minefield(data);
   }
 
 
