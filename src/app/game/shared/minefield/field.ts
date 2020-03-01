@@ -40,18 +40,5 @@ export class Field {
     return this.isClosed() && !this.isMined();
   }
 
-  setValue(value: string): void {
-    if (value === '*') {
-      this.mine = true;
-      // this.exploded = true; // TODO used ???
-    } else {
-      const val: number = +value;
-      if (!Number.isNaN(val) && this.value !== +val) {
-        this.value = val;
-      }
-    }
-
-  }
-
 
 }

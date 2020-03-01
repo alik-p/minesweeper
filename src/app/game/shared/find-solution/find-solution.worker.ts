@@ -15,7 +15,7 @@ import { Field, Minefield } from '../minefield';
 
   const findSolution = (minefield: Minefield): Field[] => {
     const probabilities = Probabilities.calculate(minefield);
-    const thresholdSafe = 0.05;
+    const thresholdSafe = 0.1;
     const thresholdMined = 0.9;
     const solvedFields: Set<Field> = new Set<Field>();
 
@@ -27,8 +27,6 @@ import { Field, Minefield } from '../minefield';
         }
       });
       const min = group.probabilityMin;
-      // minGeneral = Math.min(minGeneral, min);
-      // TODO mined (???)
       if (min <= thresholdSafe) {
         const random = group.randomFieldMin;
         solvedFields.add(random);

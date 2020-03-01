@@ -1,6 +1,19 @@
 $header-height: 80px
 $footer-height: 60px
 
+%overlay
+  position: absolute
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  background-color: rgba(255, 255, 255, 0.6)
+  display: flex
+  justify-content: center
+  transition: background-color 2000ms cubic-bezier(0.5, 0, 0.1, 1)
+  z-index: 50
+
+
 .header
   position: fixed
   top: 0
@@ -26,12 +39,15 @@ $footer-height: 60px
 
 .actions--level
   display: flex
-  align-items: baseline
+  align-items: center
   margin: 0 24px
 
+  .btn-circle
+    font-weight: bold
+
+
 .level--title
-  color: #888
-  margin-bottom: 0
+  margin: 0 16px
 
 
 a,
@@ -61,19 +77,6 @@ a:hover
   box-shadow: 0 0 20px 20px #ffffff
 
 
-%overlay
-  position: absolute
-  top: 0
-  left: 0
-  height: 100%
-  width: 100%
-  background-color: rgba(255, 255, 255, 0.6)
-  display: flex
-  justify-content: center
-  transition: background-color 2000ms cubic-bezier(0.5, 0, 0.1, 1)
-  z-index: 50
-
-
 .minefield--container
   position: relative
   padding-top: 50px
@@ -98,11 +101,10 @@ a:hover
   z-index: 100
   display: flex
   justify-content: space-between
-
-.minefield--toolbar
   font-size: larger
   font-weight: 700
   color: #1976d2
+
 
 .minefield--actions
   display: flex

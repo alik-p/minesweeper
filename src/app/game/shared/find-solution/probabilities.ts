@@ -34,7 +34,6 @@ export class Probabilities {
 
     groups.forEach(group => {
       group.fields.forEach(field => {
-        // TODO needed (???)
         field.probability = (field.probability > 0.99) ? 0.99 : field.probability;
         field.probability = (field.probability < 0) ? 0 : field.probability;
       });

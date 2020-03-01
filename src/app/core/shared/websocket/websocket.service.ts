@@ -10,8 +10,8 @@ export abstract class WebSocketService {
   protected messages$: Subject<unknown>;
   protected socket$: WebSocketSubject<unknown>;
 
-  private readonly config: WebSocketConfig<unknown>;
   private alive = true;
+  private readonly config: WebSocketConfig<unknown>;
   private connectionStatus$: Observable<boolean>;
   private isConnected: boolean;
   private reconnection$: Observable<number>;

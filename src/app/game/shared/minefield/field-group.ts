@@ -1,7 +1,9 @@
 import { Field } from './field';
 import { AppUtils } from '../../../core/shared/app-utils';
 
+
 export class FieldGroup {
+
   private _mines: number;
   private _fields: Field[];
 
@@ -42,8 +44,6 @@ export class FieldGroup {
   get mines(): number {
     return this._mines;
   }
-
-
 
 
   get size(): number {

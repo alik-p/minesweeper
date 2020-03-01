@@ -22,6 +22,7 @@ export class GameApiService {
     this.connectionService.sendMessage<string>(GameAction.Map);
   }
 
+
   demineField(x: number, y: number): void {
     this.connectionService.sendMessage<string>(`${GameAction.Open} ${x} ${y}`);
   }
@@ -30,6 +31,7 @@ export class GameApiService {
   on$<T>(event: GameAction): Observable<T> {
     return this.connectionService.onMessage$<T>(event);
   }
+
 
   startGame(level: GameLevel): void {
     this.connectionService.sendMessage<string>(`${GameAction.New} ${level}`);

@@ -14,21 +14,14 @@ import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield
 })
 export class GameContainerComponent implements OnInit, OnDestroy {
 
-  // fieldsFlagged: FieldsSet;
   level: GameLevel;
-
   map$: Observable<string[][]>;
-  // minefield: Minefield;
   minefield$: Observable<Minefield>;
   restarted: boolean;   // TODO refactor
+  solved$: Observable<string>;
   stop$: Observable<string>;
 
-
-  solved$: Observable<string>;
-
-
   private alive = true;
-  private solutionAuto = false;
 
 
   constructor(private gameService: GameService) {
@@ -51,9 +44,9 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   }
 
+
   ngOnDestroy(): void {
     this.alive = false;
-    this.solutionAuto = false;
   }
 
 
@@ -88,7 +81,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   onRestart(): void {
     this.restarted = true;
-    this.solutionAuto = false;
     this.startGame(this.level);
   }
 

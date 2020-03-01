@@ -1,5 +1,6 @@
 import { Field } from './field';
 
+
 export class Minefield {
 
   fields: Field[] = [];
@@ -54,34 +55,19 @@ export class Minefield {
   }
 
 
-  update(data: string[][]): Minefield {
-    if (!this._data) {
-      this.init(data);
-    }
-    this.fields.forEach(field => {
-      if (field.isClosed() && !field.isMined()) {
-        field.setValue(data[field.y][field.x]);
-      }
-    });
-    return this;
-  }
-
-
   private init(data: string[][]): void {
     if (!data) {
       return;
     }
     this._data = data;
     data.forEach((row, y) => {
-      row
-        // .map(val => +val)
-        .forEach((val, x) => {
-          const field = new Field(x, y, +val);
-          if (val === '*') {
-            field.mine = true;
-          }
-          this.fields.push(field);
-        });
+      row.forEach((val, x) => {
+        const field = new Field(x, y, +val);
+        if (val === '*') {
+          field.mine = true;
+        }
+        this.fields.push(field);
+      });
     });
   }
 
