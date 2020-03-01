@@ -1,14 +1,11 @@
-<p>minefield works!</p>
-<button (click)="onSolution()">Next</button>
-<!-- Links -->
-<div id="minefield" class="card-container minefield">
+<div id="minefield" class="minefield">
   <ng-container *ngIf="minefield">
     <div class="minefield--row"
          *ngFor="let row of minefieldRows; index as y"
          (click)="onDemine($event)"
          (contextmenu)="onFlagToggle($event)">
       <ng-container *ngFor="let cell of minefieldCols; index as x">
-        <a class="minefield--cell icon--fire"
+        <a class="btn-circle minefield--cell"
            [ngClass]="fieldClass(x, y)" [attr.data-position]="[x, y]">
           <i class="fas fa-bomb"></i>
         </a>

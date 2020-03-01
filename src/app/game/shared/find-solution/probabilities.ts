@@ -1,4 +1,4 @@
-import { Field, FieldGroup, Minefield } from './minefield';
+import { Field, FieldGroup, Minefield } from '../minefield';
 
 export class Probabilities {
 

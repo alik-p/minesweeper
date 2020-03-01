@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field, Minefield } from '../../shared/minefield';
-import { FieldsSet } from '../../shared/fields-set';
-import { Probabilities } from '../../shared/probabilities';
+import { FieldsSet } from '../../shared/minefield/fields-set';
+
 
 @Component({
   selector: 'app-minefield',
@@ -23,7 +23,7 @@ export class MinefieldComponent implements OnInit {
 
 
   get minefieldCols(): number[] {
-    return this.arrayFrom(this.minefield.height);
+    return this.arrayFrom(this.minefield.width);
   }
 
   get minefieldRows(): number[] {
@@ -38,7 +38,6 @@ export class MinefieldComponent implements OnInit {
   fieldClass(x: number, y: number): string {
     const field = this.minefield.field(x, y);
     let result = '_closed';
-    // if (this.mines.has(field)) {
     if (field.isMined()) {
       result = '_marked';
     } else if (field.isExploded()) {
@@ -55,12 +54,9 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isMined() || field.isOpened()) {
       return;
     }
-    console.log('onDemine: ', field);
     this.demine.emit(field);
-    /*this.demine([field]);
-    this.gameService.reloadMap();*/
-    // this.findSolution(minefield);
   }
+
 
   onFlagToggle(event): void {
     event.preventDefault();
@@ -69,26 +65,6 @@ export class MinefieldComponent implements OnInit {
       return;
     }
     this.flagToggle.emit(field);
-  }
-
-
-  onFlagTogglePREV(event): void {
-    event.preventDefault();
-    const field = this.eventField(event);
-    if (!field || field.isOpened()) {
-      return;
-    }
-    this.mines.has(field)
-      ? this.mines.delete(field)
-      : this.mines.add(field);
-    field.mine = !field.mine;
-    this.minesChange.emit(this.mines);
-  }
-
-
-  onSolution(): void {
-    const probabilities = Probabilities.calculate(this.minefield);
-    console.log('probabilities: ', probabilities);
   }
 
 

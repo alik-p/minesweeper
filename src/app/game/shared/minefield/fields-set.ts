@@ -1,4 +1,4 @@
-import { Field } from './minefield';
+import { Field } from './index';
 
 export class FieldsSet {
   private readonly fieldSet: Set<string>;

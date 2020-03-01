@@ -1,41 +1,73 @@
-<app-dasboard *ngIf="showDashboard" (action)="onDashboardAction($event)"></app-dasboard>
-
 <div>
-
-
-  <div>
-    Level: {{level}}
-    <button (click)="onRestart()">Restart</button>
-  </div>
-
-
-  <!--solutionTEST$: <pre>{{solutionTEST$ | async | json}}</pre>-->
-
-  <div class="minefield-container" *ngIf="level > 0 && minefield$ | async as minefield">
-    <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
-      {{reason}}
+  <header class="header">
+    <div class="header--title">
+      <div class="header--logo">
+        <svg id="bomb" alt="Bomb" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bomb"
+             class="svg-inline--fa fa-bomb fa-w-16"
+             role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path fill="currentColor"
+                d="M440.5 88.5l-52 52L415 167c9.4 9.4 9.4 24.6 0 33.9l-17.4 17.4c11.8 26.1 18.4 55.1 18.4 85.6 0 114.9-93.1 208-208 208S0 418.9 0 304 93.1 96 208 96c30.5 0 59.5 6.6 85.6 18.4L311 97c9.4-9.4 24.6-9.4 33.9 0l26.5 26.5 52-52 17.1 17zM500 60h-24c-6.6 0-12 5.4-12 12s5.4 12 12 12h24c6.6 0 12-5.4 12-12s-5.4-12-12-12zM440 0c-6.6 0-12 5.4-12 12v24c0 6.6 5.4 12 12 12s12-5.4 12-12V12c0-6.6-5.4-12-12-12zm33.9 55l17-17c4.7-4.7 4.7-12.3 0-17-4.7-4.7-12.3-4.7-17 0l-17 17c-4.7 4.7-4.7 12.3 0 17 4.8 4.7 12.4 4.7 17 0zm-67.8 0c4.7 4.7 12.3 4.7 17 0 4.7-4.7 4.7-12.3 0-17l-17-17c-4.7-4.7-12.3-4.7-17 0-4.7 4.7-4.7 12.3 0 17l17 17zm67.8 34c-4.7-4.7-12.3-4.7-17 0-4.7 4.7-4.7 12.3 0 17l17 17c4.7 4.7 12.3 4.7 17 0 4.7-4.7 4.7-12.3 0-17l-17-17zM112 272c0-35.3 28.7-64 64-64 8.8 0 16-7.2 16-16s-7.2-16-16-16c-52.9 0-96 43.1-96 96 0 8.8 7.2 16 16 16s16-7.2 16-16z"></path>
+        </svg>
+      </div>
+      <h1>Minesweeper</h1>
     </div>
-
-    <div class="minefield--actions">
-      <button (click)="onSolution(minefield)">Solution: One Step</button>
-      <button (click)="onSolutionAuto(minefield)">Solution: Auto</button>
+    <div class="header--actions">
+      <div class="actions--level">
+        <h2 class="level--title">Level</h2>
+        <button type="button" class="btn-circle" (click)="onStartGame(1)">1</button>
+        <button type="button" class="btn-circle" (click)="onStartGame(2)">2</button>
+        <button type="button" class="btn-circle" (click)="onStartGame(3)">3</button>
+        <button type="button" class="btn-circle" (click)="onStartGame(4)">4</button>
+      </div>
     </div>
+  </header>
 
 
-    <div class="minefield">
-      <app-minefield
-        [minefield]="minefield"
-        [mines]="fieldsFlagged"
-        (demine)="onDemine($event)"
-        (minefieldChange)="onMinefieldChange($event)"
-        (flagToggle)="onFlagToggle($event)"
-      >
-      </app-minefield>
-    </div>
+  <main class="main">
+    <ng-container *ngIf="minefield$ | async as minefield">
 
+      <div class="minefield--toolbar">
+        <div class="minefield--info">
+          <div>
+            Level: {{level}}
+          </div>
+          <div>
+            {{solved$ | async}}
+          </div>
+        </div>
+        <div class="minefield--actions">
+          <button type="button" class="btn-rect" (click)="onSolution(minefield)">
+            <i class="fas fa-flag-checkered"></i>
+            <span>Step Auto</span>
+          </button>
+          <button type="button" class="btn-rect" (click)="onRestart()">
+            <i class="fas fa-power-off"></i>
+            <span>Restart</span>
+          </button>
+        </div>
+      </div>
 
-  </div>
+      <div class="minefield--container" *ngIf="level > 0">
+        <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
+          {{reason}}
+        </div>
+        <div class="minefield">
+          <app-minefield
+            [minefield]="minefield"
+            [mines]="fieldsFlagged"
+            (demine)="onDemine($event)"
+            (minefieldChange)="onMinefieldChange($event)"
+            (flagToggle)="onFlagToggle($event)"
+          >
+          </app-minefield>
+        </div>
+      </div>
+    </ng-container>
+  </main>
+
+  <footer class="footer">
+    <span>&copy; 2020 Aliaksandr Papko</span>
+  </footer>
 
 </div>
 
-<!--<app-terminal></app-terminal>-->

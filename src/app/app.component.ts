@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <div>
-      <app-layout></app-layout>
+      <app-game-container></app-game-container>
     </div>
   `,
-  styleUrls: ['./app.component.sass']
 })
-export class AppComponent { }
+export class AppComponent {
+}

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { GameAction, GameApiService, GameLevel } from '../../core/shared/game-api';
-import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { Field, Minefield } from './minefield';
-import { FieldsSet } from './fields-set';
+import { Field, FieldsSet, Minefield } from './minefield';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +12,10 @@ export class GameService {
   private cacheMined$: BehaviorSubject<FieldsSet> = new BehaviorSubject<FieldsSet>(undefined);
 
   private findSolutionWorker: Worker;
-  private noSolution$ = new Subject<boolean>();
-  private _solution$ = new Subject<Field[]>();
+  private noSolutionSubj$ = new Subject<boolean>();
+  private solutionSubj$ = new Subject<Field[]>();
 
   solution$: Observable<Field[]>;
-  testObs$: Observable<unknown>;
 
   constructor(private apiService: GameApiService) {
 
@@ -50,13 +48,11 @@ export class GameService {
     return this.apiService.on$(GameAction.Map)
       .pipe(
         switchMap((res: string) => {
-          const loseSymbol = '*';
-          const lose = res.indexOf(loseSymbol);
           const arr = res.split('\n');
           arr.pop();
           arr.shift();
           return of(arr.map(item => item.split('')));
-        })
+        }),
       );
   }
 
@@ -120,17 +116,6 @@ export class GameService {
   }
 
 
-  findSolutionAuto(minefield: Minefield): void {
-    this.findSolutionWorker.postMessage(minefield.data);
-  }
-
-
-  findSolutionAuto$(minefield: Minefield): Observable<boolean> {
-    this.findSolution(minefield);
-    return this.solutionAuto$();
-  }
-
-
   toggleMine(field: Field): void {
     const fieldsMined = this.cacheMined$.getValue();
     fieldsMined.has(field)
@@ -159,16 +144,13 @@ export class GameService {
 
 
   private initSolutionWorker(): void {
-    const worker = new Worker('./find-solution.worker', {type: 'module'});
+    const worker = new Worker('./find-solution/find-solution.worker', {type: 'module'});
 
-    this.solution$ = this._solution$.asObservable();
+    this.solution$ = this.solutionSubj$.asObservable();
 
     worker.onmessage = ({data}) => {
-      console.log('Worker response:', data);
       const fields: Field[] = [...data];
-
-      this._solution$.next(fields);
-
+      this.solutionSubj$.next(fields);
       if (fields.length > 0) {
         const toDemine: Field[] = [];
         fields.forEach((field: Field) => {
@@ -176,23 +158,17 @@ export class GameService {
         });
         this.demineFields(toDemine);
       } else {
-        this.noSolution$.next(true);
+        this.noSolutionSubj$.next(true);
       }
     };
 
     this.findSolutionWorker = worker;
+
   }
-
- /* private initTest$(data): Observable<unknown> {
-    return from(new Promise((resolve, reject) => {
-      const fields
-    }))
-
-  }*/
 
 
   private solutionAuto$(): Observable<boolean> {
-    const noSolution$ = this.noSolution$.asObservable();
+    const noSolution$ = this.noSolutionSubj$.asObservable();
     return this.minefield$.pipe(
       takeUntil(this.stopped$),
       tap((minefield: Minefield) => this.findSolution(minefield)),

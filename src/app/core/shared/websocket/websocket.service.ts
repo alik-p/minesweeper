@@ -33,7 +33,7 @@ export abstract class WebSocketService {
         }
       });
 
-    this.connect();   // TODO move outside the constructor (???)
+    this.connect();
 
   }
 

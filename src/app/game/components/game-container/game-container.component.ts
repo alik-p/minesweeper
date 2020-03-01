@@ -2,10 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameLevel } from '../../../core/shared/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
-import { DashboardAction } from '../../shared/dashboard-action';
 import { Field, Minefield } from '../../shared/minefield';
-import { FieldsSet } from '../../shared/fields-set';
-import { takeWhile, tap } from 'rxjs/operators';
+import { FieldsSet } from '../../shared/minefield/fields-set';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -16,7 +15,6 @@ import { takeWhile, tap } from 'rxjs/operators';
 export class GameContainerComponent implements OnInit, OnDestroy {
 
   fieldsFlagged: FieldsSet;
-  showDashboard = true;
   level: GameLevel;
 
   map$: Observable<string[][]>;
@@ -26,7 +24,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   stop$: Observable<string>;
 
 
-  solutionTEST$: Observable<Field[]>;
+  solved$: Observable<string>;
 
 
   private alive = true;
@@ -43,10 +41,13 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
     this.stop$ = this.gameService.stopped$;
 
-    this.solutionTEST$ = this.gameService.solution$
+    this.solved$ = this.gameService.solution$
       .pipe(
-        tap(res => console.log('solutionTEST$: ', res))
-      )
+        map((res: Field[]) => res.length > 0
+          ? `Fields solved: ${res.length}`
+          : 'Solution not found'
+        )
+      );
 
   }
 
@@ -59,21 +60,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   onDemine(field: Field): void {
     this.restarted = false;
     this.demine(field);
-  }
-
-
-  onDashboardAction(action: DashboardAction): void {
-    switch (action) {
-      case ('passwords'): {
-        console.log('TODO passwords');
-        break;
-      }
-      default: {
-        this.startGame(action);
-        break;
-      }
-    }
-    this.showDashboard = false;
   }
 
 
@@ -92,18 +78,10 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
 
-  onSolutionAutoNEW(minefield: Minefield): void {
-    this.gameService.findSolutionAuto(minefield);
-  }
-
-
-  onSolutionAuto(minefield: Minefield): void {
-    this.solutionAuto = true;
-    this.gameService.findSolutionAuto$(minefield)
-      .pipe(takeWhile(() => this.solutionAuto))
-      .subscribe(
-        res => console.log('onSolutionAuto: ', res)
-      );
+  onStartGame(level: GameLevel): void {
+    this.level = level;
+    this.restarted = true;
+    this.startGame(this.level);
   }
 
 
