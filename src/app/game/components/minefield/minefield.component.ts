@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field, Minefield } from '../../shared/minefield';
-import { FieldsSet } from '../../shared/minefield/fields-set';
+import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
 
 
 @Component({
@@ -10,23 +10,18 @@ import { FieldsSet } from '../../shared/minefield/fields-set';
 })
 export class MinefieldComponent implements OnInit {
   @Input() minefield: Minefield;
-  @Input() mines: FieldsSet;
-
-  @Output() demine = new EventEmitter<Field>();
-  @Output() flagToggle = new EventEmitter<Field>();
-  @Output() minefieldChange = new EventEmitter<Minefield>();
-  @Output() minesChange = new EventEmitter<FieldsSet>();
+  @Output() action = new EventEmitter<IMinefieldAction>();
 
 
   constructor() {
   }
 
 
-  get minefieldCols(): number[] {
+  get cols(): number[] {
     return this.arrayFrom(this.minefield.width);
   }
 
-  get minefieldRows(): number[] {
+  get rows(): number[] {
     return this.arrayFrom(this.minefield.height);
   }
 
@@ -54,7 +49,7 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isMined() || field.isOpened()) {
       return;
     }
-    this.demine.emit(field);
+    this.action.emit({action: MinefieldAction.Demine, data: field});
   }
 
 
@@ -64,7 +59,7 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isOpened()) {
       return;
     }
-    this.flagToggle.emit(field);
+    this.action.emit({action: MinefieldAction.Flag, data: field});
   }
 
 

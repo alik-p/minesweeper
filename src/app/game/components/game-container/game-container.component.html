@@ -54,12 +54,9 @@
         <div class="minefield">
           <app-minefield
             [minefield]="minefield"
-            [mines]="fieldsFlagged"
-            (demine)="onDemine($event)"
-            (minefieldChange)="onMinefieldChange($event)"
-            (flagToggle)="onFlagToggle($event)"
-          >
+            (action)="onMinefieldAction($event)">
           </app-minefield>
+
         </div>
       </div>
     </ng-container>

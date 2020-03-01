@@ -3,8 +3,8 @@ import { GameLevel } from '../../../core/shared/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { Field, Minefield } from '../../shared/minefield';
-import { FieldsSet } from '../../shared/minefield/fields-set';
 import { map } from 'rxjs/operators';
+import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
 
 
 @Component({
@@ -14,11 +14,11 @@ import { map } from 'rxjs/operators';
 })
 export class GameContainerComponent implements OnInit, OnDestroy {
 
-  fieldsFlagged: FieldsSet;
+  // fieldsFlagged: FieldsSet;
   level: GameLevel;
 
   map$: Observable<string[][]>;
-  minefield: Minefield;
+  // minefield: Minefield;
   minefield$: Observable<Minefield>;
   restarted: boolean;   // TODO refactor
   stop$: Observable<string>;
@@ -57,19 +57,20 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
 
-  onDemine(field: Field): void {
-    this.restarted = false;
-    this.demine(field);
-  }
-
-
-  onMinefieldChange(minefield): void {
-    this.minefield = minefield;
-  }
-
-
-  onFlagToggle(field: Field): void {
-    this.gameService.toggleMine(field);
+  onMinefieldAction(event: IMinefieldAction): void {
+    const field = event.data;
+    switch (event.action) {
+      case MinefieldAction.Demine: {
+        this.demine(field);
+        break;
+      }
+      case MinefieldAction.Flag: {
+        this.flagToggle(field);
+        break;
+      }
+      default:
+        break;
+    }
   }
 
 
@@ -96,7 +97,13 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     if (!field) {
       return;
     }
+    this.restarted = false;
     this.gameService.demineField(field.x, field.y);
+  }
+
+
+  private flagToggle(field: Field): void {
+    this.gameService.toggleMine(field);
   }
 
 
