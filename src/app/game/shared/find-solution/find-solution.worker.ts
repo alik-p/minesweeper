@@ -15,7 +15,7 @@ import { Field, Minefield } from '../minefield';
 
   const findSolution = (minefield: Minefield): Field[] => {
     const probabilities = Probabilities.calculate(minefield);
-    const thresholdSafe = 0.12;
+    const thresholdSafe = 0.05;
     const thresholdMined = 0.9;
     const solvedFields: Set<Field> = new Set<Field>();
 
