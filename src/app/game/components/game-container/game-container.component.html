@@ -1,18 +1,41 @@
 <app-dasboard *ngIf="showDashboard" (action)="onDashboardAction($event)"></app-dasboard>
 
-Level: {{level}}
-<button (click)="onRestart()">Restart</button>
+<div>
 
-<div class="minefield-container" *ngIf="level > 0">
-  <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
-    {{reason}}
+
+  <div>
+    Level: {{level}}
+    <button (click)="onRestart()">Restart</button>
   </div>
-  <app-minefield
-    [minefield]="minefield$ | async"
-    [(mines)]="fieldsMarked"
-    (demine)="onDemine($event)">
-  </app-minefield>
+
+
+  <!--solutionTEST$: <pre>{{solutionTEST$ | async | json}}</pre>-->
+
+  <div class="minefield-container" *ngIf="level > 0 && minefield$ | async as minefield">
+    <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
+      {{reason}}
+    </div>
+
+    <div class="minefield--actions">
+      <button (click)="onSolution(minefield)">Solution: One Step</button>
+      <button (click)="onSolutionAuto(minefield)">Solution: Auto</button>
+    </div>
+
+
+    <div class="minefield">
+      <app-minefield
+        [minefield]="minefield"
+        [mines]="fieldsFlagged"
+        (demine)="onDemine($event)"
+        (minefieldChange)="onMinefieldChange($event)"
+        (flagToggle)="onFlagToggle($event)"
+      >
+      </app-minefield>
+    </div>
+
+
+  </div>
+
 </div>
 
-
-<app-terminal></app-terminal>
+<!--<app-terminal></app-terminal>-->

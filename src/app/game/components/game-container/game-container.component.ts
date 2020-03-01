@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameLevel } from '../../../core/shared/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { DashboardAction } from '../../shared/dashboard-action';
 import { Field, Minefield } from '../../shared/minefield';
 import { FieldsSet } from '../../shared/fields-set';
-import { map } from 'rxjs/operators';
+import { takeWhile, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -13,16 +13,24 @@ import { map } from 'rxjs/operators';
   templateUrl: './game-container.component.html',
   styleUrls: ['./game-container.component.sass']
 })
-export class GameContainerComponent implements OnInit {
+export class GameContainerComponent implements OnInit, OnDestroy {
 
-  fieldsMarked: FieldsSet;
+  fieldsFlagged: FieldsSet;
   showDashboard = true;
   level: GameLevel;
 
   map$: Observable<string[][]>;
+  minefield: Minefield;
   minefield$: Observable<Minefield>;
   restarted: boolean;   // TODO refactor
   stop$: Observable<string>;
+
+
+  solutionTEST$: Observable<Field[]>;
+
+
+  private alive = true;
+  private solutionAuto = false;
 
 
   constructor(private gameService: GameService) {
@@ -30,11 +38,21 @@ export class GameContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.map$ = this.gameService.map$;
-    this.minefield$ = this.gameService.map$
-      .pipe(map((data: string[][]) => new Minefield(data)));
+
+    this.minefield$ = this.gameService.minefield$;
 
     this.stop$ = this.gameService.stopped$;
 
+    this.solutionTEST$ = this.gameService.solution$
+      .pipe(
+        tap(res => console.log('solutionTEST$: ', res))
+      )
+
+  }
+
+  ngOnDestroy(): void {
+    this.alive = false;
+    this.solutionAuto = false;
   }
 
 
@@ -59,8 +77,39 @@ export class GameContainerComponent implements OnInit {
   }
 
 
+  onMinefieldChange(minefield): void {
+    this.minefield = minefield;
+  }
+
+
+  onFlagToggle(field: Field): void {
+    this.gameService.toggleMine(field);
+  }
+
+
+  onSolution(minefield: Minefield): void {
+    this.gameService.findSolution(minefield);
+  }
+
+
+  onSolutionAutoNEW(minefield: Minefield): void {
+    this.gameService.findSolutionAuto(minefield);
+  }
+
+
+  onSolutionAuto(minefield: Minefield): void {
+    this.solutionAuto = true;
+    this.gameService.findSolutionAuto$(minefield)
+      .pipe(takeWhile(() => this.solutionAuto))
+      .subscribe(
+        res => console.log('onSolutionAuto: ', res)
+      );
+  }
+
+
   onRestart(): void {
     this.restarted = true;
+    this.solutionAuto = false;
     this.startGame(this.level);
   }
 
@@ -70,17 +119,11 @@ export class GameContainerComponent implements OnInit {
       return;
     }
     this.gameService.demineField(field.x, field.y);
-    this.reloadMap();
   }
 
-
-  private reloadMap(): void {
-    this.gameService.reloadMap();
-  }
 
   private startGame(level: GameLevel): void {
     this.level = level;
-    this.fieldsMarked = new FieldsSet();
     this.gameService.startGame(level);
   }
 

@@ -36,10 +36,14 @@ export class Field {
     return this.mine;
   }
 
+  isUnknown(): boolean {
+    return this.isClosed() && !this.isMined();
+  }
 
   setValue(value: string): void {
     if (value === '*') {
-      this.exploded = true;
+      this.mine = true;
+      // this.exploded = true; // TODO used ???
     } else {
       const val: number = +value;
       if (!Number.isNaN(val) && this.value !== +val) {

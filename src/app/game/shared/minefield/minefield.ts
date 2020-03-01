@@ -11,6 +11,8 @@ export class Minefield {
   }
 
   get data(): string[][] {
+    const result = this._data;
+    this.fieldsMined().forEach(({x, y}) => result[y][x] = '*');
     return this._data;
   }
 
@@ -42,9 +44,14 @@ export class Minefield {
   }
 
 
-   fieldsValuable(): Field[] {
-     return this.fields.filter(field => field.isOpened() && field.value > 0);
-   }
+  fieldsValuable(): Field[] {
+    return this.fields.filter(field => field.isOpened() && field.value > 0);
+  }
+
+
+  fieldsMined(): Field[] {
+    return this.fields.filter(field => field.isMined());
+  }
 
 
   update(data: string[][]): Minefield {
@@ -66,9 +73,15 @@ export class Minefield {
     }
     this._data = data;
     data.forEach((row, y) => {
-      row.map(val => +val).forEach((val, x) => {
-        this.fields.push(new Field(x, y, +val));
-      });
+      row
+        // .map(val => +val)
+        .forEach((val, x) => {
+          const field = new Field(x, y, +val);
+          if (val === '*') {
+            field.mine = true;
+          }
+          this.fields.push(field);
+        });
     });
   }
 

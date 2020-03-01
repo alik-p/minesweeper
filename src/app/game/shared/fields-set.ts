@@ -7,6 +7,10 @@ export class FieldsSet {
     this.fieldSet = new Set<string>();
   }
 
+  get keys(): {x: number, y: number}[] {
+    return [...this.fieldSet].map(item => this.position(item));
+  }
+
   add(field): FieldsSet {
     this.fieldSet.add(this.key(field));
     return this;
@@ -23,6 +27,11 @@ export class FieldsSet {
 
   private key(field: Field): string {
     return field ? `${field.x} ${field.y}` : null;
+  }
+
+  private position(key: string): {x: number, y: number} {
+    const [x, y] = key.split(' ');
+    return {x: +x, y: +y};
   }
 
 }

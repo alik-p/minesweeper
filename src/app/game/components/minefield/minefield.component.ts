@@ -13,6 +13,8 @@ export class MinefieldComponent implements OnInit {
   @Input() mines: FieldsSet;
 
   @Output() demine = new EventEmitter<Field>();
+  @Output() flagToggle = new EventEmitter<Field>();
+  @Output() minefieldChange = new EventEmitter<Minefield>();
   @Output() minesChange = new EventEmitter<FieldsSet>();
 
 
@@ -36,7 +38,8 @@ export class MinefieldComponent implements OnInit {
   fieldClass(x: number, y: number): string {
     const field = this.minefield.field(x, y);
     let result = '_closed';
-    if (this.mines.has(field)) {
+    // if (this.mines.has(field)) {
+    if (field.isMined()) {
       result = '_marked';
     } else if (field.isExploded()) {
       result = '_exploded';
@@ -65,10 +68,20 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isOpened()) {
       return;
     }
+    this.flagToggle.emit(field);
+  }
+
+
+  onFlagTogglePREV(event): void {
+    event.preventDefault();
+    const field = this.eventField(event);
+    if (!field || field.isOpened()) {
+      return;
+    }
     this.mines.has(field)
       ? this.mines.delete(field)
       : this.mines.add(field);
-    // field.mine = !field.mine;
+    field.mine = !field.mine;
     this.minesChange.emit(this.mines);
   }
 

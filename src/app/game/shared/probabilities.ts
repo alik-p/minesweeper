@@ -48,13 +48,15 @@ export class Probabilities {
     const result: FieldGroup[] = [];
     minefield.fieldsValuable()
       .forEach((field: Field) => {
-        const group: Field[] = minefield.fieldNeighbors(field)
-          .filter(item => item && item.isClosed());
+        const neighbors = minefield.fieldNeighbors(field);
+        const group: Field[] = neighbors
+          .filter(item => item && item.isUnknown());
         if (group.length > 0) {
-          result.push(new FieldGroup(field.value, group));
+          const neutralized = neighbors.filter(item => item && item.isMined()).length;
+          const mines = field.value - neutralized;
+          result.push(new FieldGroup(mines, group));
         }
       });
-
     return result;
   }
 
