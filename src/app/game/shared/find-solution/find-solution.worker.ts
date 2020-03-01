@@ -1,0 +1,42 @@
+/// <reference lib="webworker" />
+
+
+import { Probabilities } from './probabilities';
+import { Field, Minefield } from '../minefield';
+
+{
+
+  addEventListener('message', ({data}) => {
+    const minefield = new Minefield(data);
+    const solution = findSolution(minefield);
+    postMessage(solution);
+  });
+
+
+  const findSolution = (minefield: Minefield): Field[] => {
+    const probabilities = Probabilities.calculate(minefield);
+    const thresholdSafe = 0.1;
+    const thresholdMined = 0.9;
+    const solvedFields: Set<Field> = new Set<Field>();
+
+    probabilities.forEach((group) => {
+      group.fields.forEach(field => {
+        if (field.probability >= thresholdMined) {
+          field.mine = true;
+          solvedFields.add(field);
+        }
+      });
+      const min = group.probabilityMin;
+      if (min <= thresholdSafe) {
+        const random = group.randomFieldMin;
+        solvedFields.add(random);
+      }
+    });
+
+    const demineFields = Array.from(solvedFields);
+    return demineFields;
+
+  };
+
+
+}

@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  template: `
+    <div>
+      <app-game-container></app-game-container>
+    </div>
+  `,
 })
 export class AppComponent {
-  title = 'evo-minesweeper';
 }

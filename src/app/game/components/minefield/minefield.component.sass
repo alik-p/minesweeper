@@ -1,0 +1,104 @@
+%icon-number
+  font-size: large
+  font-weight: 700
+  border-color: transparent
+  box-shadow: none
+  background: none
+  z-index: -1
+
+
+.minefield
+  display: flex
+  flex-direction: column
+  flex-wrap: wrap
+  justify-content: center
+  margin-top: 16px
+
+  &--row
+    display: flex
+
+
+.minefield--cell
+  font-size: 20px
+
+  &._closed
+    .fas:before
+      content: ''
+
+  &._exploded
+    .fas:before
+      content: '\f1e2'
+
+  &._marked
+    .fas:before
+      content: '\f11e'
+      color: #e13439
+
+  &._0
+    @extend %icon-number
+
+    i:before
+      content: ''
+
+  &._1
+    @extend %icon-number
+    color: #888
+
+    i:before
+      content: '1'
+
+  &._2
+    @extend %icon-number
+    color: darkgreen
+
+    i:before
+      content: '2'
+
+  &._3
+    @extend %icon-number
+    color: #4a3493
+
+    i:before
+      content: '3'
+
+  &._4
+    @extend %icon-number
+    color: #fb8c00
+
+    i:before
+      content: '4'
+
+  &._5
+    @extend %icon-number
+    color: #fb8c00
+
+    i:before
+      content: '5'
+
+  &._6
+    @extend %icon-number
+    color: #e12229
+
+    i:before
+      content: '6'
+
+  &._7
+    @extend %icon-number
+    color: #e12229
+
+    i:before
+      content: '7'
+
+  &._8
+    @extend %icon-number
+    color: #e12229
+
+    i:before
+      content: '8'
+
+  &._9
+    @extend %icon-number
+    color: #e12229
+
+    i:before
+      content: '9'

@@ -1,6 +1,10 @@
 {
   "name": "evo-minesweeper",
-  "version": "0.0.0",
+  "author": {
+    "name": "Aliaksandr Papko",
+    "email": "aliaksandr.papko@gmail.com"
+  },
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
