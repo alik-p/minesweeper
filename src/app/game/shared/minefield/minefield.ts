@@ -64,7 +64,7 @@ export class Minefield {
       row.forEach((val, x) => {
         const field = new Field(x, y, +val);
         if (val === '*') {
-          field.mine = true;
+          field.exploded = true;
         }
         this.fields.push(field);
       });

@@ -1,5 +1,6 @@
 export class Field {
 
+  exploded = false;
   mine = false;
   probability: number;
   value: number;
@@ -7,7 +8,6 @@ export class Field {
   readonly x: number;
   readonly y: number;
 
-  private exploded = false;
 
   constructor(x: number, y: number, value: number) {
     this.x = x;

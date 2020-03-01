@@ -34,6 +34,9 @@
           <div>
             {{solved$ | async}}
           </div>
+          <div class="_danger">
+            {{stop$ | async}}
+          </div>
         </div>
         <div class="minefield--actions">
           <button type="button" class="btn-rect" (click)="onSolution(minefield)">
