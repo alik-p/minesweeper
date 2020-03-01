@@ -79,6 +79,7 @@ a:hover
 
 .minefield--container
   position: relative
+  width: fit-content
   padding-top: 50px
 
   .minefield
@@ -95,15 +96,23 @@ a:hover
 
 .minefield--toolbar
   position: fixed
-  top: $header-height + 24px
+  top: $header-height + 8px
   right: 24px
   left: 24px
   z-index: 100
+  background: white
+  box-shadow: 0 0 5px 0 #ffffff
+  padding: 8px 0
   display: flex
   justify-content: space-between
   font-size: larger
   font-weight: 700
-  color: #1976d2
+
+  ._info
+    color: #1976d2
+
+  ._danger
+    color: #e12229
 
 
 .minefield--actions

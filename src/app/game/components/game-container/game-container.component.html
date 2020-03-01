@@ -31,9 +31,14 @@
           <div>
             Level: {{level}}
           </div>
-          <div>
-            {{solved$ | async}}
-          </div>
+          <ng-container *ngIf="!restarted">
+            <div class="_info">
+              {{solved$ | async}}
+            </div>
+            <div class="_danger">
+              {{stop$ | async}}
+            </div>
+          </ng-container>
         </div>
         <div class="minefield--actions">
           <button type="button" class="btn-rect" (click)="onSolution(minefield)">
