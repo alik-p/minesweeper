@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameAction, GameApiService, GameLevel } from '../../core/shared/game-api';
+import { GameAction, GameApiService, GameLevel } from '../../core/game-api';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { Field, FieldsSet, Minefield } from './minefield';

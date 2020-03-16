@@ -1,5 +1,5 @@
 import { Field } from './field';
-import { AppUtils } from '../../../core/shared/app-utils';
+import { AppUtils } from '../../../core/app-utils';
 
 
 export class FieldGroup {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameLevel } from '../../../core/shared/game-api';
+import { GameLevel } from '../../../core/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { Field, Minefield } from '../../shared/minefield';
