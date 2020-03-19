@@ -32,6 +32,10 @@ export class Game {
     this.minefield = new Minefield(this.levelConfig(level));
   }
 
+  minesCount(): number {
+    return this.minefield.minesCount();
+  }
+
 
   private levelConfig(level: number): GameConfig {
     const levels: { [level: string]: GameConfig } = configs.levels;

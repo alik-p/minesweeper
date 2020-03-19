@@ -16,21 +16,29 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   level: GameLevel;
   map$: Observable<string[][]>;
+  mines$: Observable<number>;
   minefield$: Observable<Minefield>;
   restarted: boolean;   // TODO refactor
   solved$: Observable<string>;
   stop$: Observable<string>;
 
   private alive = true;
+  private readonly flagged = new Set<string>();
 
 
   constructor(private gameService: GameService) {
+  }
+
+  get minesFlagged(): number {
+    return this.flagged.size;
   }
 
   ngOnInit(): void {
     this.map$ = this.gameService.map$;
 
     this.minefield$ = this.gameService.minefield$;
+
+    this.mines$ = this.gameService.mines$;
 
     this.stop$ = this.gameService.stopped$;
 
@@ -74,13 +82,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   onStartGame(level: GameLevel): void {
     this.level = level;
-    this.restarted = true;
     this.startGame(this.level);
   }
 
 
   onRestart(): void {
-    this.restarted = true;
     this.startGame(this.level);
   }
 
@@ -95,12 +101,16 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
 
   private flagToggle(field: Field): void {
+    const key = `${field.x} ${field.y}`;
+    this.flagged.has(key) ? this.flagged.delete(key) : this.flagged.add(key);
     this.gameService.toggleMine(field);
   }
 
 
   private startGame(level: GameLevel): void {
     this.level = level;
+    this.flagged.clear();
+    this.restarted = true;
     this.gameService.startGame(level);
   }
 

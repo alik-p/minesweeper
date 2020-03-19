@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { GameAction } from './game-action';
 import { Game } from '../game-core/game';
@@ -14,6 +14,7 @@ export class GameApiConnection2Service {
   protected readonly messages$: Subject<unknown>;  // TODO type???
 
   private readonly game: Game;
+  private minesSub$ = new BehaviorSubject<number>(undefined);
 
   constructor() {
     this.messages$ = new Subject<Message<unknown>>();  // TODO type???
@@ -21,9 +22,14 @@ export class GameApiConnection2Service {
   }
 
 
+  mines$(): Observable<number> {
+    return this.minesSub$.asObservable();
+  }
+
+
   onMessage$<T>(event: string): Observable<T> {
     return this.messages$.pipe(
-      filter((res: Message<T>) => res.event === event),
+      filter((res: Message<T>) => res && res.event === event),
       map((res: Message<T>) => res.data)
     );
   }
@@ -35,30 +41,27 @@ export class GameApiConnection2Service {
   }*/
 
 
-
   sendMessage<T>(event: GameAction, data: T): void {
     switch (event) {
       case GameAction.New: {
         this.startGame(+data);
         break;
       }
-      case GameAction.Open: {
-        this.openField(data.toString());
-        break;
-      }
       case GameAction.Map: {
         this.currentMap();
+        break;
+      }
+      case GameAction.Open: {
+        this.openField(data.toString());
         break;
       }
       default:
         break;
     }
-
-
   }
 
 
-  currentMap(): void {
+  private currentMap(): void {
     this.messages$.next({event: GameAction.Map, data: this.game.currentMap()});
   }
 
@@ -73,6 +76,8 @@ export class GameApiConnection2Service {
   private startGame(level: number): void {
     this.game.startGame(level);
     this.messages$.next({event: GameAction.New, data: true});
+    this.minesSub$.next(this.game.minesCount());
+    // this.minesCount();
   }
 
 

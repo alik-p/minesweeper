@@ -21,6 +21,11 @@ export class Minefield {
   }
 
 
+  minesCount(): number {
+    return this.config.mines;
+  }
+
+
   open(position: Position): MoveResult {
     const field = this.field(position);
     if (field) {
@@ -37,7 +42,7 @@ export class Minefield {
     const {cols, rows} = this.config;
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        result += this.field({row, col}).toString(openAll);
+        result += this.field({row, col}).toString(this.isWin() || openAll);
       }
       result += '\n';
     }
@@ -113,7 +118,7 @@ export class Minefield {
 
 
   private isWin(): boolean {
-    return this.fields.length === this.opened.size + this.config.mines;
+    return this.fields.length === this.opened.size + this.minesCount();
   }
 
   private openField(field: Field): Field {

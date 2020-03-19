@@ -9,13 +9,12 @@ import { Field, FieldsSet, Minefield } from './minefield';
 })
 export class GameService {
 
+  // mines$: Observable<number>;
+  solution$: Observable<Field[]>;
   private cacheMined$: BehaviorSubject<FieldsSet> = new BehaviorSubject<FieldsSet>(undefined);
-
   private findSolutionWorker: Worker;
   private noSolutionSubj$ = new Subject<boolean>();
   private solutionSubj$ = new Subject<Field[]>();
-
-  solution$: Observable<Field[]>;
 
   constructor(private apiService: GameApiService) {
     this.initSolutionWorker();
@@ -44,6 +43,11 @@ export class GameService {
         return minefield;
       })
     );
+  }
+
+
+  get mines$(): Observable<number> {
+    return this.apiService.mines$();
   }
 
 
@@ -109,6 +113,7 @@ export class GameService {
   startGame(level: GameLevel): void {
     this.cacheMined$.next(new FieldsSet());
     this.apiService.startGame(level);
+    // this.mines$ = this.apiService.mines$();
     this.reloadMap();
   }
 

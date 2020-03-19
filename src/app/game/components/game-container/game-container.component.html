@@ -31,6 +31,9 @@
           <div>
             Level: {{level}}
           </div>
+          <div>
+            Mines: {{(mines$ | async) - minesFlagged}}
+          </div>
           <ng-container *ngIf="!restarted">
             <div class="_info">
               {{solved$ | async}}
