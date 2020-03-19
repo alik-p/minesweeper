@@ -51,7 +51,7 @@ export class GameService {
     return this.apiService.on$(GameAction.Open)
       .pipe(
         filter((res: string) =>
-          res.includes('You win') || res.includes('fail')
+          res.includes('win') || res.includes('lose')
         ),
         map((res: string) =>
           res.replace(`${GameAction.Open}: `, '')

@@ -2,15 +2,15 @@ import { GameConfig } from './game-config';
 import { AppUtils } from '../app-utils';
 import { Position } from './position';
 import { Field } from './field';
+import { MoveResult } from './move-result';
 
 
 export class Minefield {
   private fields: Field[] = [];
+  private opened = new Set<string>();
 
   constructor(private config: GameConfig) {
-    console.log('new Minefield: ', this.config)
     this.init(this.config);
-    console.log('Minefield: ', this)
   }
 
 
@@ -21,11 +21,13 @@ export class Minefield {
   }
 
 
-  openField(position: Position): 'fail' | 'success' {
+  open(position: Position): MoveResult {
     const field = this.field(position);
     if (field) {
-      this.openFieldNeighbors(field.open());
-      return field.isMined() ? 'fail' : 'success';
+      this.openFieldNeighbors(this.openField(field));
+      return field.isMined()
+        ? MoveResult.Lose
+        : this.isWin() ? MoveResult.Win : MoveResult.Success;
     }
   }
 
@@ -35,7 +37,7 @@ export class Minefield {
     const {cols, rows} = this.config;
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        result +=    this.field({row, col}).toString(openAll);
+        result += this.field({row, col}).toString(openAll);
       }
       result += '\n';
     }
@@ -110,16 +112,28 @@ export class Minefield {
   }
 
 
-  private openFieldNeighbors(field: Field): void {
-    this.fieldNeighborsToOpen(field)
-      .forEach(neighbor =>
-        this.openFieldNeighbors(neighbor.open())
-      );
+  private isWin(): boolean {
+    return this.fields.length === this.opened.size + this.config.mines;
+  }
+
+  private openField(field: Field): Field {
+    this.opened.add(this.toKey(field));
+    return field.open();
   }
 
 
-  private toKey(position: Position): string {
-    const {col, row} = position;
+  private openFieldNeighbors(field: Field): void {
+    this.fieldNeighborsToOpen(field)
+      .forEach(neighbor => {
+        this.openFieldNeighbors(
+          this.openField(neighbor)
+        );
+      });
+  }
+
+
+  private toKey(field: Field): string {
+    const {col, row} = field;
     return `${row} ${col}`;
   }
 

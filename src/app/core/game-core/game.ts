@@ -2,6 +2,7 @@ import { Minefield } from './minefield';
 import { Position } from './position';
 import { GameConfig } from './game-config';
 import configs from './game.configs.json';
+import { MoveResult } from './move-result';
 
 
 export class Game {
@@ -17,9 +18,9 @@ export class Game {
   }
 
 
-  openField(position: Position): 'fail' | 'success' {
-    const result = this.minefield.openField(position);
-    if (result === 'fail') {
+  openField(position: Position): MoveResult {
+    const result = this.minefield.open(position);
+    if (result === MoveResult.Lose) {
       this.gameOver = true;
     }
     return result;
