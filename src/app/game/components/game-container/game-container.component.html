@@ -25,7 +25,6 @@
 
   <main class="main">
     <ng-container *ngIf="minefield$ | async as minefield">
-
       <div class="minefield--toolbar">
         <div class="minefield--info">
           <div>
@@ -38,33 +37,34 @@
             <div class="_info">
               {{solved$ | async}}
             </div>
-            <div class="_danger">
-              {{stop$ | async}}
-            </div>
           </ng-container>
         </div>
+        <ng-container *ngIf="!restarted && stop$ | async as reason">
+          <div class="minefield--stop-game" [ngClass]="'_' + reason">
+            {{reason}}
+          </div>
+        </ng-container>
+
         <div class="minefield--actions">
-          <button type="button" class="btn-rect" (click)="onSolution(minefield)">
-            <i class="fas fa-flag-checkered"></i>
-            <span>Step Auto</span>
-          </button>
-          <button type="button" class="btn-rect" (click)="onRestart()">
-            <i class="fas fa-power-off"></i>
-            <span>Restart</span>
-          </button>
-        </div>
+            <button type="button" class="btn-rect" (click)="onSolution(minefield)">
+              <i class="fas fa-flag-checkered"></i>
+              <span>Step Auto</span>
+            </button>
+            <button type="button" class="btn-rect" (click)="onRestart()">
+              <i class="fas fa-power-off"></i>
+              <span>Restart</span>
+            </button>
+          </div>
+
       </div>
 
       <div class="minefield--container" *ngIf="level > 0">
-        <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
-          {{reason}}
-        </div>
+        <div class="stop-game" *ngIf="!restarted && stop$ | async"></div>
         <div class="minefield">
           <app-minefield
             [minefield]="minefield"
             (action)="onMinefieldAction($event)">
           </app-minefield>
-
         </div>
       </div>
     </ng-container>

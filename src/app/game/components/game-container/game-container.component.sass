@@ -66,6 +66,7 @@ a:hover
 
 .footer
   position: fixed
+  z-index: 100
   right: 0
   bottom: 0
   left: 0
@@ -109,15 +110,25 @@ a:hover
   font-weight: 700
 
   ._info
-    color: #1976d2
-
-  ._danger
-    color: #e12229
+    color: #888
+    font-size: initial
+    font-weight: 500
 
 
 .minefield--actions
   display: flex
 
   .btn-rect
+    height: fit-content
     font-weight: bolder
     margin-left: 24px
+
+.minefield--stop-game
+  font-size: xx-large
+  font-weight: 800
+  text-transform: uppercase
+  &._lose
+    color: #e12229
+  &._win
+    color: #1976d2
+
