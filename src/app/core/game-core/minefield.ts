@@ -8,7 +8,9 @@ export class Minefield {
   private fields: Field[] = [];
 
   constructor(private config: GameConfig) {
+    console.log('new Minefield: ', this.config)
     this.init(this.config);
+    console.log('Minefield: ', this)
   }
 
 
@@ -25,6 +27,19 @@ export class Minefield {
       this.openFieldNeighbors(field.open());
       return field.isMined() ? 'fail' : 'success';
     }
+  }
+
+
+  toString(openAll = false): string {
+    let result = '';
+    const {cols, rows} = this.config;
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        result +=    this.field({row, col}).toString(openAll);
+      }
+      result += '\n';
+    }
+    return result;
   }
 
 

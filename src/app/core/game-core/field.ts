@@ -46,8 +46,8 @@ export class Field {
   }
 
 
-  toString(): string {
-    return this.isOpened()
+  toString(opened = false): string {
+    return opened || this.isOpened()
       ? (this.isMined() ? '*' : this.mark.toString())
       : '?';
   }

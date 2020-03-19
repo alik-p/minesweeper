@@ -59,8 +59,7 @@ export class GameApiService {
 
   startGame(level: GameLevel): void {
     // this.connectionService.sendMessage<string>(`${GameAction.New} ${level}`);
-
-    this.connection2Service.sendMessage<GameLevel>(GameAction.New, 1);
+    this.connection2Service.sendMessage<GameLevel>(GameAction.New, level);
 
   }
 
