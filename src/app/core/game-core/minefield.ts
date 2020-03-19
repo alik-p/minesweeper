@@ -2,7 +2,7 @@ import { GameConfig } from './game-config';
 import { AppUtils } from '../app-utils';
 import { Position } from './position';
 import { Field } from './field';
-import { MoveResult } from './move-result';
+import { Demine } from './demine';
 
 
 export class Minefield {
@@ -26,13 +26,13 @@ export class Minefield {
   }
 
 
-  open(position: Position): MoveResult {
+  open(position: Position): Demine {
     const field = this.field(position);
     if (field) {
       this.openFieldNeighbors(this.openField(field));
       return field.isMined()
-        ? MoveResult.Lose
-        : this.isWin() ? MoveResult.Win : MoveResult.Success;
+        ? Demine.Lose
+        : this.isWin() ? Demine.Win : Demine.Success;
     }
   }
 

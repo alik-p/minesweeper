@@ -2,7 +2,7 @@ import { Minefield } from './minefield';
 import { Position } from './position';
 import { GameConfig } from './game-config';
 import configs from './game.configs.json';
-import { MoveResult } from './move-result';
+import { Demine } from './demine';
 
 
 export class Game {
@@ -18,9 +18,9 @@ export class Game {
   }
 
 
-  openField(position: Position): MoveResult {
+  openField(position: Position): Demine {
     const result = this.minefield.open(position);
-    if (result === MoveResult.Lose) {
+    if (result === Demine.Lose) {
       this.gameOver = true;
     }
     return result;
@@ -30,6 +30,7 @@ export class Game {
   startGame(level: number): void {
     this.gameOver = false;
     this.minefield = new Minefield(this.levelConfig(level));
+    console.log('back: ', this.minefield);
   }
 
   minesCount(): number {

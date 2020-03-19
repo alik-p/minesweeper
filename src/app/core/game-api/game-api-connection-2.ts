@@ -2,6 +2,7 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { GameAction } from './game-action';
 import { Game } from '../game-core/game';
+import { Demine } from '../game-core/demine';
 
 interface Message<T> {
   event: string;
@@ -22,10 +23,14 @@ export class GameApiConnection2Service {
   }
 
 
+  demine$(row: number, col: number): Observable<Demine> {
+    return of(this.game.openField({col, row}));
+  }
+
+
   mines$(): Observable<number> {
     return this.minesSub$.asObservable();
   }
-
 
   onMessage$<T>(event: string): Observable<T> {
     return this.messages$.pipe(
@@ -34,11 +39,10 @@ export class GameApiConnection2Service {
     );
   }
 
-  /*onMessage$<T>(event: string): Observable<T> {
-    return this.messages$.pipe(
-      filter((res: T) => (res || '').toString().startsWith(event)),
-    );
-  }*/
+
+  currentMap$(): Observable<string> {
+    return of(this.game.currentMap());
+  }
 
 
   sendMessage<T>(event: GameAction, data: T): void {
@@ -58,6 +62,20 @@ export class GameApiConnection2Service {
       default:
         break;
     }
+  }
+
+
+  startGame$(level: number): Observable<boolean> {
+    return new Observable(observer => {
+      this.game.startGame(level);
+      this.minesSub$.next(this.game.minesCount());
+      observer.next(true);
+      observer.complete();
+    });
+    /*this.game.startGame(level);
+    this.messages$.next({event: GameAction.New, data: true});
+    this.minesSub$.next(this.game.minesCount());*/
+    // this.minesCount();
   }
 
 
