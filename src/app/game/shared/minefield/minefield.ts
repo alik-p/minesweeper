@@ -41,7 +41,7 @@ export class Minefield {
     validX.forEach(x => {
       validY.forEach(y => result.push(this.field(x, y)));
     });
-    return result;
+    return result.filter(item => !!item);
   }
 
 

@@ -28,7 +28,7 @@ export class GameService {
         switchMap((res: string) => {
           const arr = res.split('\n');
           arr.pop();
-          arr.shift();
+          // arr.shift();
           return of(arr.map(item => item.split('')));
         }),
       );
@@ -51,7 +51,7 @@ export class GameService {
     return this.apiService.on$(GameAction.Open)
       .pipe(
         filter((res: string) =>
-          res.includes('You win') || res.includes('You lose')
+          res.includes('You win') || res.includes('fail')
         ),
         map((res: string) =>
           res.replace(`${GameAction.Open}: `, '')
