@@ -47,7 +47,6 @@ export class GameApiService {
 
   demineField(x: number, y: number): void {
     // this.connectionService.sendMessage<string>(`${GameAction.Open} ${x} ${y}`);
-    console.log('demineField: x y', x, y);
     this.connection2Service.sendMessage<string>(GameAction.Open, `${x} ${y}`);
   }
 

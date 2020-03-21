@@ -96,7 +96,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
       return;
     }
     this.restarted = false;
-    this.gameService.demineField(field.x, field.y);
+    this.gameService.demine(field.x, field.y);
   }
 
 

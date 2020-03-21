@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GameAction, GameApiService, GameLevel } from '../../core/game-api';
-import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
+import { GameApiService, GameLevel } from '../../core/game-api';
+import { BehaviorSubject, combineLatest, Observable, of, Subject, zip } from 'rxjs';
 import { concatMap, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { Field, FieldsSet, Minefield } from './minefield';
 import { Demine } from '../../core/game-core/demine';
@@ -26,7 +26,6 @@ export class GameService {
   constructor(private apiService: GameApiService) {
     this.initSolutionWorker();
   }
-
 
 
   get map$(): Observable<string[][]> {
@@ -58,47 +57,21 @@ export class GameService {
   }
 
 
-
   get stopped$(): Observable<string> {
     return this.statusSubj$.asObservable()
       .pipe(
-        distinctUntilChanged(),
-        tap(res => console.log('on stopped$: ', res)),
         filter(res => [Demine.Win, Demine.Lose].includes(res)),
+        distinctUntilChanged(),
       );
   }
 
 
-  /**
-   * Emits when win
-   * Input: 'open: You win. The password for this level is: <password>'
-   * Output: <password>
-   */
-  get win$(): Observable<string> {
-    return this.apiService.on$(GameAction.Open)
-      .pipe(
-        filter((res: string) => res.includes('You win')),
-        map((res: string) => res.split(' ').pop()),
-      );
-  }
-
-
-  demineField(x: number, y: number): void {
-    this.apiService.demineField$(x, y).pipe(
+  demine(x: number, y: number): void {
+    this.demineField$(x, y).pipe(
       take(1),
-      tap(res => this.statusSubj$.next(res)),
       concatMap(() => this.apiService.currentMap$()),
       tap(res => this.mapSubj$.next(res)),
     ).subscribe();
-  }
-
-
-  demineFields(fields: Field[]): void {
-    if (!fields || fields.length === 0) {
-      return;
-    }
-    fields.forEach(({x, y}) => this.apiService.demineField(x, y));
-    this.reloadMap();
   }
 
 
@@ -114,37 +87,14 @@ export class GameService {
   }
 
 
-  reloadMap(): void {
-    this.apiService.currentMap();
-  }
-
-
   startGame(level: GameLevel): void {
     this.cacheMined$.next(new FieldsSet());
-    /*this.apiService.startGame(level);
-    this.reloadMap();*/
     this.apiService.startGame$(level)
       .pipe(
         take(1),
         concatMap(() => this.apiService.currentMap$()),
         tap(res => this.mapSubj$.next(res)),
       ).subscribe();
-
-
-    /*
-
-        this.apiService.demineField$(x, y).pipe(
-      take(1),
-      tap(res => console.log('demineField$: ', res)),
-      tap(res => this.statusSubj$.next(res)),
-      concatMap(() => this.apiService.currentMap$()),
-      tap(res => this.mapSubj$.next(res)),
-      tap(res => console.log('currentMap$: ', res)),
-    ).subscribe();
-
-    */
-
-
   }
 
 
@@ -154,6 +104,27 @@ export class GameService {
       ? fieldsMined.delete(field)
       : fieldsMined.add(field);
     this.cacheMined$.next(fieldsMined);
+  }
+
+
+  private demineField$(x: number, y: number): Observable<Demine> {
+    return this.apiService.demineField$(x, y)
+      .pipe(
+        tap(res => this.statusSubj$.next(res)),
+      );
+  }
+
+
+  private demineFields(fields: Field[]): void {
+    if (!fields || fields.length === 0) {
+      return;
+    }
+    zip(...fields.map(({x, y}) => this.demineField$(x, y)))
+      .pipe(
+        take(1),
+        concatMap(() => this.apiService.currentMap$()),
+        tap(res => this.mapSubj$.next(res)),
+      ).subscribe();
   }
 
 
