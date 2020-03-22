@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameApiService, GameLevel } from '../../core/game-api';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, zip } from 'rxjs';
 import { concatMap, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { Field, FieldsSet, Minefield } from './minefield';
+import { Field, FieldsSet, IField, Minefield } from './minefield';
 import { Demine } from '../../core/game-core/demine';
 
 @Injectable({
@@ -10,16 +10,13 @@ import { Demine } from '../../core/game-core/demine';
 })
 export class GameService {
 
-  // mines$: Observable<number>;
-  // map$: Observable<string[][]>;
-  // stopped$: Observable<string>;
-  solution$: Observable<Field[]>;
+  solution$: Observable<IField[]>;
   private cacheMined$: BehaviorSubject<FieldsSet> = new BehaviorSubject<FieldsSet>(undefined);
   private findSolutionWorker: Worker;
   private noSolutionSubj$ = new Subject<boolean>();
 
   private mapSubj$ = new Subject<string>();
-  private solutionSubj$ = new Subject<Field[]>();
+  private solutionSubj$ = new Subject<IField[]>();
   private statusSubj$ = new BehaviorSubject<Demine>(undefined);
 
 
@@ -45,7 +42,11 @@ export class GameService {
     return combineLatest([this.map$, mined$]).pipe(
       map(([data, mined]) => {
         const minefield = new Minefield(data);
-        mined.keys.forEach(({x, y}) => minefield.field(x, y).mine = true);
+        mined.keys.forEach(({x, y}) => {
+          minefield.field(x, y)
+            .setFlag(true)
+            .setMine(true);
+        });
         return minefield;
       })
     );
@@ -80,7 +81,7 @@ export class GameService {
   }
 
 
-  flagMine(field: Field): void {
+  flagMine(field: IField): void {
     const fieldsMined = this.cacheMined$.getValue();
     fieldsMined.add(field);
     this.cacheMined$.next(fieldsMined);
@@ -115,7 +116,7 @@ export class GameService {
   }
 
 
-  private demineFields(fields: Field[]): void {
+  private demineFields(fields: IField[]): void {
     if (!fields || fields.length === 0) {
       return;
     }
@@ -133,11 +134,11 @@ export class GameService {
     this.solution$ = this.solutionSubj$.asObservable();
 
     worker.onmessage = ({data}) => {
-      const fields: Field[] = [...data];
+      const fields: IField[] = [...data];
       this.solutionSubj$.next(fields);
       if (fields.length > 0) {
-        const toDemine: Field[] = [];
-        fields.forEach((field: Field) => {
+        const toDemine: IField[] = [];
+        fields.forEach((field: IField) => {
           field.mine ? this.flagMine(field) : toDemine.push(field);
         });
         this.demineFields(toDemine);

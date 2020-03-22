@@ -33,10 +33,10 @@ export class MinefieldComponent implements OnInit {
   fieldClass(x: number, y: number): string {
     const field = this.minefield.field(x, y);
     let result = '_closed';
-    if (field.isMined()) {
-      result = '_marked';
-    } else if (field.isExploded()) {
-      result = '_exploded';
+    if (field.isFlagged()) {
+      result = '_flagged';
+    } else if (field.isMined()) {
+      result = '_mined';
     } else if (field.isOpened()) {
       result = `_${field.value}`;
     }
@@ -59,6 +59,7 @@ export class MinefieldComponent implements OnInit {
     if (!field || field.isOpened()) {
       return;
     }
+
     this.action.emit({action: MinefieldAction.Flag, data: field});
   }
 

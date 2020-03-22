@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GameLevel } from '../../../core/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
-import { Field, Minefield } from '../../shared/minefield';
-import { map } from 'rxjs/operators';
+import { Field, IField, Minefield } from '../../shared/minefield';
+import { map, tap } from 'rxjs/operators';
 import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
 
 
@@ -44,7 +44,14 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
     this.solved$ = this.gameService.solution$
       .pipe(
-        map((res: Field[]) => res.length > 0
+        tap((res: IField[]) => {
+          res.forEach(item => {
+            if (item.mine) {
+              this.flagged.add(this.toKey(item));
+            }
+          });
+        }),
+        map((res: IField[]) => res.length > 0
           ? `Fields solved: ${res.length}`
           : 'Solution not found'
         )
@@ -101,7 +108,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
 
   private flagToggle(field: Field): void {
-    const key = `${field.x} ${field.y}`;
+    const key = this.toKey(field);
     this.flagged.has(key) ? this.flagged.delete(key) : this.flagged.add(key);
     this.gameService.toggleMine(field);
   }
@@ -112,6 +119,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     this.flagged.clear();
     this.restarted = true;
     this.gameService.startGame(level);
+  }
+
+
+  private toKey(field: Field | IField): string {
+    return `${field.x} ${field.y}`;
   }
 
 
