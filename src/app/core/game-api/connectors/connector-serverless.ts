@@ -1,9 +1,9 @@
+import { Connector } from './connector';
+import { Game } from '../../game-backend/game';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Game } from '../game-backend/game';
-import { Demine } from '../game-backend/demine';
+import { Demine } from '../../game-backend/demine';
 
-
-export class GameApiConnection2Service {
+export class ServerlessConnector implements  Connector {
 
   private readonly game: Game;
   private minesSub$ = new BehaviorSubject<number>(undefined);
