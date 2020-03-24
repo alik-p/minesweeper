@@ -4,7 +4,7 @@ import { GameApiConnectionService } from './game-api-connection.service';
 import { GameLevel } from './game-level';
 import { GameAction } from './game-action';
 import { GameApiConnection2Service } from './game-api-connection-2';
-import { Demine } from '../game-core/demine';
+import { Demine } from '../game-backend/demine';
 
 
 @Injectable({

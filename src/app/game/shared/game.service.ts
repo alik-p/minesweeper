@@ -3,7 +3,7 @@ import { GameApiService, GameLevel } from '../../core/game-api';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, zip } from 'rxjs';
 import { concatMap, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { Field, FieldsSet, IField, Minefield } from './minefield';
-import { Demine } from '../../core/game-core/demine';
+import { Demine } from '../../core/game-backend/demine';
 
 @Injectable({
   providedIn: 'root'

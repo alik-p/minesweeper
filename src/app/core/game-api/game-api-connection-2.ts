@@ -1,8 +1,8 @@
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { GameAction } from './game-action';
-import { Game } from '../game-core/game';
-import { Demine } from '../game-core/demine';
+import { Game } from '../game-backend/game';
+import { Demine } from '../game-backend/demine';
 
 interface Message<T> {
   event: string;
