@@ -30,7 +30,6 @@ export class Game {
   startGame(level: number): void {
     this.gameOver = false;
     this.minefield = new Minefield(this.levelConfig(level));
-    console.log('back: ', this.minefield);
   }
 
   minesCount(): number {

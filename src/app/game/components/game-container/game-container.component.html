@@ -30,8 +30,8 @@
           <div>
             Level: {{level}}
           </div>
-          <div>
-            Mines: {{(mines$ | async) - minesFlagged}}
+          <div *ngIf="mines$ | async as mines">
+            Mines: {{mines - minesFlagged}}
           </div>
           <div class="_info">
             {{solved$ | async}}
