@@ -15,10 +15,8 @@ import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield
 export class GameContainerComponent implements OnInit, OnDestroy {
 
   level: GameLevel;
-  map$: Observable<string[][]>;
-  mines$: Observable<number>;
   minefield$: Observable<Minefield>;
-  restarted: boolean;   // TODO refactor
+  mines$: Observable<number>;
   solved$: Observable<string>;
   stop$: Observable<string>;
 
@@ -34,7 +32,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.map$ = this.gameService.map$;
 
     this.minefield$ = this.gameService.minefield$;
 
@@ -44,14 +41,14 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
     this.solved$ = this.gameService.solution$
       .pipe(
-        tap((res: IField[]) => {
+        tap((res: IField[] = []) => {
           res.forEach(item => {
             if (item.mine) {
               this.flagged.add(this.toKey(item));
             }
           });
         }),
-        map((res: IField[]) => res.length > 0
+        map((res: IField[]) => !res ? '' : res.length > 0
           ? `Fields solved: ${res.length}`
           : 'Solution not found'
         )
@@ -102,7 +99,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     if (!field) {
       return;
     }
-    this.restarted = false;
     this.gameService.demine(field.x, field.y);
   }
 
@@ -117,7 +113,6 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   private startGame(level: GameLevel): void {
     this.level = level;
     this.flagged.clear();
-    this.restarted = true;
     this.gameService.startGame(level);
   }
 

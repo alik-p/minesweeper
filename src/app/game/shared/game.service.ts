@@ -13,7 +13,6 @@ export class GameService {
   solution$: Observable<IField[]>;
   private cacheMined$: BehaviorSubject<FieldsSet> = new BehaviorSubject<FieldsSet>(undefined);
   private findSolutionWorker: Worker;
-  private noSolutionSubj$ = new Subject<boolean>();
 
   private mapSubj$ = new Subject<string>();
   private solutionSubj$ = new Subject<IField[]>();
@@ -61,7 +60,7 @@ export class GameService {
   get stopped$(): Observable<string> {
     return this.statusSubj$.asObservable()
       .pipe(
-        filter(res => [Demine.Win, Demine.Lose].includes(res)),
+        filter(res => !res || [Demine.Win, Demine.Lose].includes(res)),
         distinctUntilChanged(),
       );
   }
@@ -90,6 +89,8 @@ export class GameService {
 
   startGame(level: GameLevel): void {
     this.cacheMined$.next(new FieldsSet());
+    this.statusSubj$.next(undefined);
+    this.solutionSubj$.next(undefined);
     this.apiService.startGame$(level)
       .pipe(
         take(1),
@@ -142,8 +143,6 @@ export class GameService {
           field.mine ? this.flagMine(field) : toDemine.push(field);
         });
         this.demineFields(toDemine);
-      } else {
-        this.noSolutionSubj$.next(true);
       }
     };
 
