@@ -1,11 +1,12 @@
 import { Minefield } from './minefield';
 import { Position } from './position';
 import { GameConfig } from './game-config';
-import configs from './game.configs.json';
 import { Demine } from './demine';
+import configs from './game.configs.json';
 
 
 export class Game {
+
   private gameOver = false;
   private minefield: Minefield;
 

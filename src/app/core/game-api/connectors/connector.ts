@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
-import { Demine } from '../../game-backend/demine';
+import { Demine } from 'src/app/core/game-backend/demine';
+
 
 export interface Connector {
 

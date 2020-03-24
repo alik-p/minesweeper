@@ -39,7 +39,7 @@
         </div>
         <ng-container *ngIf="stop$ | async as reason">
           <div class="minefield--stop-game" [ngClass]="'_' + reason">
-            {{reason}}
+            {{labelStop(reason)}}
           </div>
         </ng-container>
 

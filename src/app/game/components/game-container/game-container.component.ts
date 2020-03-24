@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Field, IField, Minefield } from '../../shared/minefield';
 import { map, tap } from 'rxjs/operators';
 import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
+import { Demine } from '../../../core/game-backend/demine';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   minefield$: Observable<Minefield>;
   mines$: Observable<number>;
   solved$: Observable<string>;
-  stop$: Observable<string>;
+  stop$: Observable<Demine>;
 
   private alive = true;
   private readonly flagged = new Set<string>();
@@ -27,38 +28,26 @@ export class GameContainerComponent implements OnInit, OnDestroy {
   constructor(private gameService: GameService) {
   }
 
+
   get minesFlagged(): number {
     return this.flagged.size;
   }
 
+
   ngOnInit(): void {
-
-    this.minefield$ = this.gameService.minefield$;
-
-    this.mines$ = this.gameService.mines$;
-
-    this.stop$ = this.gameService.stopped$;
-
-    this.solved$ = this.gameService.solution$
-      .pipe(
-        tap((res: IField[] = []) => {
-          res.forEach(item => {
-            if (item.mine) {
-              this.flagged.add(this.toKey(item));
-            }
-          });
-        }),
-        map((res: IField[]) => !res ? '' : res.length > 0
-          ? `Fields solved: ${res.length}`
-          : 'Solution not found'
-        )
-      );
-
+    this.init();
   }
 
 
   ngOnDestroy(): void {
     this.alive = false;
+  }
+
+
+  labelStop(reason: Demine): string {
+    return reason && reason
+      .replace(Demine.Lose, 'Game Over')
+      .replace(Demine.Win, 'You Win !!!');
   }
 
 
@@ -107,6 +96,26 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     const key = this.toKey(field);
     this.flagged.has(key) ? this.flagged.delete(key) : this.flagged.add(key);
     this.gameService.toggleMine(field);
+  }
+
+
+  private init(): void {
+    this.minefield$ = this.gameService.minefield$;
+    this.mines$ = this.gameService.mines$;
+    this.stop$ = this.gameService.stopped$;
+    this.solved$ = this.gameService.solution$.pipe(
+      tap((res: IField[] = []) => {
+        res.forEach(item => {
+          if (item.mine) {
+            this.flagged.add(this.toKey(item));
+          }
+        });
+      }),
+      map((res: IField[]) => !res ? '' : res.length > 0
+        ? `Fields solved: ${res.length}`
+        : 'Solution not found'
+      )
+    );
   }
 
 

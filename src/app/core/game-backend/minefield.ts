@@ -1,11 +1,12 @@
-import { GameConfig } from './game-config';
 import { AppUtils } from '../app-utils';
+import { GameConfig } from './game-config';
 import { Position } from './position';
 import { Field } from './field';
 import { Demine } from './demine';
 
 
 export class Minefield {
+
   private fields: Field[] = [];
   private opened = new Set<string>();
 
@@ -121,6 +122,7 @@ export class Minefield {
     return this.fields.length === this.opened.size + this.minesCount();
   }
 
+
   private openField(field: Field): Field {
     this.opened.add(this.toKey(field));
     return field.open();
@@ -140,12 +142,6 @@ export class Minefield {
   private toKey(field: Field): string {
     const {col, row} = field;
     return `${row} ${col}`;
-  }
-
-
-  private toPosition(key: string): Position {
-    const [row, col] = key.split(' ').map(item => +item);
-    return {row, col};
   }
 
 

@@ -1,10 +1,11 @@
-import { WebSocketConfig, WebSocketService } from '../../websocket';
 import { OnDestroy } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Demine } from '../../game-backend/demine';
-import { GameAction } from '../game-action';
 import { filter, map } from 'rxjs/operators';
+import { WebSocketConfig, WebSocketService } from 'src/app/core/websocket';
+import { Demine } from 'src/app/core/game-backend/demine';
+import { GameAction } from '../game-action';
 import { Connector } from './connector';
+
 
 export class WebsocketConnector extends WebSocketService implements OnDestroy, Connector {
 

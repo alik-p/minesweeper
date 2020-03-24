@@ -57,7 +57,7 @@ export class GameService {
   }
 
 
-  get stopped$(): Observable<string> {
+  get stopped$(): Observable<Demine> {
     return this.statusSubj$.asObservable()
       .pipe(
         filter(res => !res || [Demine.Win, Demine.Lose].includes(res)),

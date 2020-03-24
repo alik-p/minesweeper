@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
 
-
 import { Probabilities } from './probabilities';
 import { Field, Minefield } from '../minefield';
 
