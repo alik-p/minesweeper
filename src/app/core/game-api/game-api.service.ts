@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Demine } from '../game-backend/demine';
+import { Demine } from '../game-backend/types/demine';
 import { Connector } from './connectors/connector';
 import { ServerlessConnector } from './connectors/connector-serverless';
 

@@ -2,7 +2,7 @@ import { OnDestroy } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { WebSocketConfig, WebSocketService } from 'src/app/core/websocket';
-import { Demine } from 'src/app/core/game-backend/demine';
+import { Demine } from 'src/app/core/game-backend/types/demine';
 import { GameAction } from '../game-action';
 import { Connector } from './connector';
 

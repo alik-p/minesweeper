@@ -1,7 +1,7 @@
 import { Minefield } from './minefield';
-import { Position } from './position';
-import { GameConfig } from './game-config';
-import { Demine } from './demine';
+import { Position } from './types/position';
+import { GameConfig } from './types/game-config';
+import { Demine } from './types/demine';
 import configs from './game.configs.json';
 
 

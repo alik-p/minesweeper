@@ -1,8 +1,8 @@
 import { AppUtils } from '../app-utils';
-import { GameConfig } from './game-config';
-import { Position } from './position';
+import { GameConfig } from './types/game-config';
+import { Position } from './types/position';
 import { Field } from './field';
-import { Demine } from './demine';
+import { Demine } from './types/demine';
 
 
 export class Minefield {

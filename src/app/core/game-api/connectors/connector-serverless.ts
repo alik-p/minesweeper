@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Connector } from './connector';
 import { Game } from 'src/app/core/game-backend/game';
-import { Demine } from 'src/app/core/game-backend/demine';
+import { Demine } from 'src/app/core/game-backend/types/demine';
 
 
 export class ServerlessConnector implements Connector {

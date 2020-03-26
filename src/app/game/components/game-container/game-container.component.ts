@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Field, IField, Minefield } from '../../shared/minefield';
 import { map, tap } from 'rxjs/operators';
 import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
-import { Demine } from '../../../core/game-backend/demine';
+import { Demine } from '../../../core/game-backend/types/demine';
 
 
 @Component({
