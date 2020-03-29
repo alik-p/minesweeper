@@ -4,7 +4,7 @@ import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
 import { Field, IField, Minefield } from '../../shared/minefield';
 import { map, tap } from 'rxjs/operators';
-import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
+import { IMinefieldAction, MinefieldAction } from '../../shared/types/minefield-action';
 import { Demine } from '../../../core/game-backend/types/demine';
 
 

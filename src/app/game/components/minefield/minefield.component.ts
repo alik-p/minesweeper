@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field, Minefield } from '../../shared/minefield';
-import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
+import { IMinefieldAction, MinefieldAction } from '../../shared/types/minefield-action';
 
 
 @Component({
