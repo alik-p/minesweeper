@@ -13,13 +13,11 @@ describe('Game Backend - Field', () => {
     expect(field.getMark()).toBe(3);
   });
 
-  it('#hasMinesAround should return false', () => {
-    expect(field.hasMinesAround()).toBe(false);
-  });
-
-  it('#hasMinesAround should return true', () => {
+  it('#hasMinesAround', () => {
+    field.setMark(0);
+    expect(field.hasMinesAround()).toBe(false, 'should return false');
     field.setMark(1);
-    expect(field.hasMinesAround()).toBe(true);
+    expect(field.hasMinesAround()).toBe(true, 'should return true');
   });
 
 

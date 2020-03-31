@@ -17,7 +17,7 @@ export class Field {
 
 
   hasMinesAround(): boolean {
-    return this.getMark() > 0;
+    return this.getMark() !== 0;
   }
 
 
