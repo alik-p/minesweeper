@@ -1,9 +1,8 @@
-<div id="minefield" class="minefield">
+<div id="minefield" class="minefield"
+     (click)="onDemine($event)"
+     (contextmenu)="onFlagToggle($event)">
   <ng-container *ngIf="minefield">
-    <div class="minefield--row"
-         *ngFor="let row of rows; index as y"
-         (click)="onDemine($event)"
-         (contextmenu)="onFlagToggle($event)">
+    <div class="minefield--row" *ngFor="let row of rows; index as y">
       <ng-container *ngFor="let cell of cols; index as x">
         <a class="btn-circle minefield--cell"
            [ngClass]="fieldClass(x, y)" [attr.data-position]="[x, y]">
