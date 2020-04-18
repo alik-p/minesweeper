@@ -27,10 +27,10 @@
     <ng-container *ngIf="minefield$ | async as minefield">
       <div class="minefield--toolbar">
         <div class="minefield--info">
-          <div>
+          <div class="info--level">
             Level: {{level}}
           </div>
-          <div *ngIf="mines$ | async as mines">
+          <div class="info--mines" *ngIf="mines$ | async as mines">
             Mines: {{mines - minesFlagged}}
           </div>
           <div class="_info">
