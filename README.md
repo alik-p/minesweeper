@@ -2,9 +2,17 @@
 
 This project is a Minesweeper game application. 
 
-The application includes an analytic module for automatic solution search.
+The project includes:
+ - game user interface (front-end);  
+ - analytic module for automatic solution search;
+ - background game logic (back-end).
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.3.
+
+
+## Demo
+
+GitHub Pages site: https://alik-p.github.io/minesweeper/
 
 
 ## Development server
