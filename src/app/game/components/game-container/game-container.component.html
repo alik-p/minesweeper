@@ -25,21 +25,24 @@
 
   <main class="main">
     <ng-container *ngIf="minefield$ | async as minefield">
-
       <div class="minefield--toolbar">
         <div class="minefield--info">
-          <div>
+          <div class="info--level">
             Level: {{level}}
           </div>
-          <ng-container *ngIf="!restarted">
-            <div class="_info">
-              {{solved$ | async}}
-            </div>
-            <div class="_danger">
-              {{stop$ | async}}
-            </div>
-          </ng-container>
+          <div class="info--mines" *ngIf="mines$ | async as mines">
+            Mines: {{mines - minesFlagged}}
+          </div>
+          <div class="_info">
+            {{solved$ | async}}
+          </div>
         </div>
+        <ng-container *ngIf="stop$ | async as reason">
+          <div class="minefield--stop-game" [ngClass]="'_' + reason">
+            {{labelStop(reason)}}
+          </div>
+        </ng-container>
+
         <div class="minefield--actions">
           <button type="button" class="btn-rect" (click)="onSolution(minefield)">
             <i class="fas fa-flag-checkered"></i>
@@ -50,18 +53,16 @@
             <span>Restart</span>
           </button>
         </div>
+
       </div>
 
       <div class="minefield--container" *ngIf="level > 0">
-        <div class="stop-game" *ngIf="!restarted && stop$ | async as reason">
-          {{reason}}
-        </div>
+        <div class="stop-game" *ngIf="stop$ | async"></div>
         <div class="minefield">
           <app-minefield
             [minefield]="minefield"
             (action)="onMinefieldAction($event)">
           </app-minefield>
-
         </div>
       </div>
     </ng-container>

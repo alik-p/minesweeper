@@ -41,7 +41,7 @@ export class Minefield {
     validX.forEach(x => {
       validY.forEach(y => result.push(this.field(x, y)));
     });
-    return result;
+    return result.filter(item => !!item);
   }
 
 
@@ -64,7 +64,7 @@ export class Minefield {
       row.forEach((val, x) => {
         const field = new Field(x, y, +val);
         if (val === '*') {
-          field.exploded = true;
+          field.setMine();
         }
         this.fields.push(field);
       });

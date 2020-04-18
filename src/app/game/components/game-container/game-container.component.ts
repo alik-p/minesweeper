@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GameLevel } from '../../../core/shared/game-api';
+import { GameLevel } from '../../../core/game-api';
 import { GameService } from '../../shared/game.service';
 import { Observable } from 'rxjs';
-import { Field, Minefield } from '../../shared/minefield';
-import { map } from 'rxjs/operators';
-import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield-action';
+import { Field, IField, Minefield } from '../../shared/minefield';
+import { map, tap } from 'rxjs/operators';
+import { IMinefieldAction, MinefieldAction } from '../../shared/types/minefield-action';
+import { Demine } from '../../../core/game-backend/types/demine';
 
 
 @Component({
@@ -15,38 +16,38 @@ import { IMinefieldAction, MinefieldAction } from '../../shared/models/minefield
 export class GameContainerComponent implements OnInit, OnDestroy {
 
   level: GameLevel;
-  map$: Observable<string[][]>;
   minefield$: Observable<Minefield>;
-  restarted: boolean;   // TODO refactor
+  mines$: Observable<number>;
   solved$: Observable<string>;
-  stop$: Observable<string>;
+  stop$: Observable<Demine>;
 
   private alive = true;
+  private readonly flagged = new Set<string>();
 
 
   constructor(private gameService: GameService) {
   }
 
+
+  get minesFlagged(): number {
+    return this.flagged.size;
+  }
+
+
   ngOnInit(): void {
-    this.map$ = this.gameService.map$;
-
-    this.minefield$ = this.gameService.minefield$;
-
-    this.stop$ = this.gameService.stopped$;
-
-    this.solved$ = this.gameService.solution$
-      .pipe(
-        map((res: Field[]) => res.length > 0
-          ? `Fields solved: ${res.length}`
-          : 'Solution not found'
-        )
-      );
-
+    this.init();
   }
 
 
   ngOnDestroy(): void {
     this.alive = false;
+  }
+
+
+  labelStop(reason: Demine): string {
+    return reason && reason
+      .replace(Demine.Lose, 'Game Over')
+      .replace(Demine.Win, 'You Win !!!');
   }
 
 
@@ -74,13 +75,11 @@ export class GameContainerComponent implements OnInit, OnDestroy {
 
   onStartGame(level: GameLevel): void {
     this.level = level;
-    this.restarted = true;
     this.startGame(this.level);
   }
 
 
   onRestart(): void {
-    this.restarted = true;
     this.startGame(this.level);
   }
 
@@ -89,19 +88,46 @@ export class GameContainerComponent implements OnInit, OnDestroy {
     if (!field) {
       return;
     }
-    this.restarted = false;
-    this.gameService.demineField(field.x, field.y);
+    this.gameService.demine(field.x, field.y);
   }
 
 
   private flagToggle(field: Field): void {
+    const key = this.toKey(field);
+    this.flagged.has(key) ? this.flagged.delete(key) : this.flagged.add(key);
     this.gameService.toggleMine(field);
+  }
+
+
+  private init(): void {
+    this.minefield$ = this.gameService.minefield$;
+    this.mines$ = this.gameService.mines$;
+    this.stop$ = this.gameService.stopped$;
+    this.solved$ = this.gameService.solution$.pipe(
+      tap((res: IField[] = []) => {
+        res.forEach(item => {
+          if (item.mine) {
+            this.flagged.add(this.toKey(item));
+          }
+        });
+      }),
+      map((res: IField[]) => !res ? '' : res.length > 0
+        ? `Fields solved: ${res.length}`
+        : 'Solution not found'
+      )
+    );
   }
 
 
   private startGame(level: GameLevel): void {
     this.level = level;
+    this.flagged.clear();
     this.gameService.startGame(level);
+  }
+
+
+  private toKey(field: Field | IField): string {
+    return `${field.x} ${field.y}`;
   }
 
 

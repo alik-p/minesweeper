@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
 
-
 import { Probabilities } from './probabilities';
 import { Field, Minefield } from '../minefield';
 
@@ -22,7 +21,7 @@ import { Field, Minefield } from '../minefield';
     probabilities.forEach((group) => {
       group.fields.forEach(field => {
         if (field.probability >= thresholdMined) {
-          field.mine = true;
+          field.setMine(true);
           solvedFields.add(field);
         } else if (field.probability === 0) {
           solvedFields.add(field);
